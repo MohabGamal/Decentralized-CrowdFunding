@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 contract CrowdCharity {
 
-    uint campaignCount = 1;
+    uint public campaignCount = 1;
     struct Campaign {
         address payable owner;
         uint target;
@@ -84,5 +84,23 @@ contract CrowdCharity {
             campaigns[_campaignId].owner,
             campaigns[_campaignId].isOpen
         );
+
     }
+
+    function getCampaign(uint _campaignId) view external returns 
+    (
+        address payable owner,
+        uint target,
+        uint raisedAmount,
+        bool isOpen
+    ) 
+    {
+        return (
+            campaigns[_campaignId].owner,
+            campaigns[_campaignId].target,
+            campaigns[_campaignId].raisedAmount,
+            campaigns[_campaignId].isOpen
+        );
+    }
+
 }
