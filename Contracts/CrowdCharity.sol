@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.1;
 
 contract CrowdCharity {
 
@@ -87,7 +87,11 @@ contract CrowdCharity {
 
     }
 
-    function getCampaign(uint _campaignId) view external returns 
+    /** @dev Function to get a campaign's details.
+      * @param _campaignId defines the index of targeted campaign  
+      */ 
+    function getCampaign(uint _campaignId) view external 
+    returns 
     (
         address payable owner,
         uint target,
@@ -103,4 +107,8 @@ contract CrowdCharity {
         );
     }
 
+    /** @dev receive & fallback functions to receive ether as donation to the app
+      */ 
+    receive() external payable {}
+    fallback() external payable {}
 }
