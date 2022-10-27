@@ -2,3 +2,6 @@
 CrowdFunding.code-workspace
 /.vscode
 /artifacts
+/coverage
+/cache
+/coverage.json
