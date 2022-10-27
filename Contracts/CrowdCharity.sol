@@ -1,19 +1,21 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.1;
 
+import "./CharityRewards.sol";
+
 contract CrowdCharity {
 
+    CharityRewards rewardContract = new CharityRewards(msg.sender);
     uint public campaignCount = 1;
     struct Campaign {
         address payable owner;
         uint target;
         uint raisedAmount;
-        //uint fundersCount;
         bool isOpen;
     }
-            //CampaignID =>  (Funder => amount)
+    //CampaignID =>  (Funder => amount)
     mapping (uint => mapping(address => uint)) public funderAmount; 
-    mapping(uint => Campaign) public campaigns;
+    mapping (uint => Campaign) public campaigns;
 
 
     event Started(
@@ -63,6 +65,8 @@ contract CrowdCharity {
         funderAmount[_campaignId][msg.sender] += msg.value;
         campaigns[_campaignId].raisedAmount += msg.value;
 
+        rewardContract.mint(msg.sender, 0, 100);
+
         emit Funded(
             _campaignId,
             msg.value,
@@ -90,15 +94,14 @@ contract CrowdCharity {
     /** @dev Function to get a campaign's details.
       * @param _campaignId defines the index of targeted campaign  
       */ 
-    function getCampaign(uint _campaignId) view external 
+    function getCampaign(uint _campaignId) view public 
     returns 
     (
         address payable owner,
         uint target,
         uint raisedAmount,
         bool isOpen
-    ) 
-    {
+    ) {
         return (
             campaigns[_campaignId].owner,
             campaigns[_campaignId].target,
@@ -107,8 +110,15 @@ contract CrowdCharity {
         );
     }
 
-    /** @dev receive & fallback functions to receive ether as donation to the app
+    // function dummy() view public returns(address){
+    //     address ad = rewardContract.dummy2(msg.sender);
+    //     return ad;
+    // }
+
+    /** @dev receive & fallback unique functions to receive ether as donation to the app
       */ 
     receive() external payable {}
-    fallback() external payable {}
+    fallback() external payable {
+        rewardContract.mint(msg.sender, 1, 10); // special reward only for our supports ;) 
+    }
 }

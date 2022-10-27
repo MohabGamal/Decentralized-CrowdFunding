@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract CharityRewards is ERC1155, Ownable {
     
+    address deployer;
     uint tokensCount = 0;
     mapping (uint => Token) public tokens;
     struct Token {
@@ -19,18 +20,20 @@ contract CharityRewards is ERC1155, Ownable {
         string tokenUri
     );
 
-    constructor() ERC1155("") {}
+    constructor(address _deployer) ERC1155("") {
+        deployer = _deployer;
+    }
 
-    /** @dev Function to add new subtokens of the main ERC1155 token
+    /** @dev Function to allow admin to add new subtokens of the main ERC1155 token
       * @param _tokenName subtoken name 
       * @param _tokenUri subtoken uri(metadata location on the ipfs)
       */
     function addToken(
         string memory _tokenName,
         string memory _tokenUri
-    ) public onlyOwner {
+    ) public {
+        require(msg.sender == deployer, "Original owner only can add tokens");
 
-        tokensCount++;
         tokens[tokensCount] = Token({
             name: _tokenName,
             uri: _tokenUri
@@ -40,6 +43,7 @@ contract CharityRewards is ERC1155, Ownable {
             tokens[tokensCount].name,
             tokens[tokensCount].uri
         );
+        tokensCount++;
     }
 
     /** @dev Function to mint(produce) a subtoken from outside of this contract (externally) 
@@ -78,7 +82,7 @@ contract CharityRewards is ERC1155, Ownable {
     /** @dev Function to get subtoken details
       * @param _tokenId subtoken id
       */ 
-    function getToken(uint _tokenId) view external 
+    function getToken(uint _tokenId) view public  
     returns (
         string memory _name,
         string memory _uri
@@ -88,5 +92,9 @@ contract CharityRewards is ERC1155, Ownable {
             tokens[_tokenId].uri
         );
     }
+
+    // function dummy2(address a) pure  public returns (address){
+    //     return a;
+    // }
 
 }
