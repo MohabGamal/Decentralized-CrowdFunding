@@ -5,7 +5,7 @@ import "./CharityRewards.sol";
 
 contract CrowdCharity {
 
-    CharityRewards rewardContract = new CharityRewards(msg.sender);
+    CharityRewards public rewardContract = new CharityRewards(msg.sender);
     uint public campaignCount = 1;
     struct Campaign {
         address payable owner;
@@ -65,7 +65,7 @@ contract CrowdCharity {
         funderAmount[_campaignId][msg.sender] += msg.value;
         campaigns[_campaignId].raisedAmount += msg.value;
 
-        rewardContract.mint(msg.sender, 0, 100);
+        rewardContract.mint(msg.sender, 0, msg.value);
 
         emit Funded(
             _campaignId,
@@ -119,6 +119,6 @@ contract CrowdCharity {
       */ 
     receive() external payable {}
     fallback() external payable {
-        rewardContract.mint(msg.sender, 1, 10); // special reward only for our supports ;) 
+        rewardContract.mint(msg.sender, 1, msg.value); // special reward only for our supports ;) 
     }
 }

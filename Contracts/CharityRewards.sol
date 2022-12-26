@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract CharityRewards is ERC1155, Ownable {
     
-    address deployer;
+    address public deployer;
     uint tokensCount = 0;
     mapping (uint => Token) public tokens;
     struct Token {

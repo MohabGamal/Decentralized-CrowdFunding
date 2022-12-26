@@ -10,6 +10,10 @@ describe("CrowdCharity", () => {
   beforeEach(async () => {
     CrowdCharity = await ethers.getContractFactory("CrowdCharity");
     crowdcharity = await CrowdCharity.deploy();
+    const charityRewards = await hre.ethers.getContractAt("CharityRewards",  await crowdcharity.rewardContract());
+    // console.log(await crowdcharity.rewardContract());
+    // console.log(charityRewards.address);
+
     [owner, addr1, addr2, _] = await ethers.getSigners();
     await crowdcharity.createCampaign(200);
   });
