@@ -1,0 +1,32 @@
+name: D-crowdfunding CI
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+    env:
+      CI: true
+      # MONGO_URL: mongodb://localhost/nasa
+    strategy:
+      matrix:
+        node-version: [18.x, 16.x]
+        # mongodb-version: ['6.7']
+    runs-on: [windows-latest]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js version ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      # - name: Use MongoDB from GitHub actions
+      #   uses: supercharge/mongodb-github-action@1.6.0
+      #   with:
+      #     mongodb-version: ${{ matrix.mongodb-version }}
+      - run: npm install
+      - run: npm compile 
+      - run: npm run test
+      - run: npm run deploy
+      # - run: npm run start
+      
