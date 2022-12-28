@@ -1,17 +1,9 @@
 name: D-crowdfunding CI
 on:
-<<<<<<< HEAD
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-=======
-  # push:
-  workflow_dispatch:
-    branches: [ master ]
-  # pull_request:
-  #   branches: [ master ]
->>>>>>> 43774e71528b8545ed81a05e7fbfe51a0b4edc95
 jobs:
   build:
     env:
@@ -19,15 +11,9 @@ jobs:
       # MONGO_URL: mongodb://localhost/nasa
     strategy:
       matrix:
-<<<<<<< HEAD
         node-version: [18.x, 16.x]
         # mongodb-version: ['6.7']
     runs-on: [windows-latest]
-=======
-        node-version: [18.x]
-        # mongodb-version: ['6.7']
-    runs-on: [macOS-latest, windows-latest]
->>>>>>> 43774e71528b8545ed81a05e7fbfe51a0b4edc95
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js version ${{ matrix.node-version }}
@@ -39,10 +25,7 @@ jobs:
       #   with:
       #     mongodb-version: ${{ matrix.mongodb-version }}
       - run: npm install
-<<<<<<< HEAD
       - run: npm compile 
-=======
->>>>>>> 43774e71528b8545ed81a05e7fbfe51a0b4edc95
       - run: npm run test
       - run: npm run deploy
       # - run: npm run start
