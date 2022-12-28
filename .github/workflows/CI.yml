@@ -16,19 +16,22 @@ jobs:
         # mongodb-version: ['6.7']
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Use Node.js version ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Hardhat Solidity
+        uses: amine7777/hardhat-action@v1
+
       # - name: Use MongoDB from GitHub actions
       #   uses: supercharge/mongodb-github-action@1.6.0
       #   with:
       #     mongodb-version: ${{ matrix.mongodb-version }}
-      - run: npm install
-      - run: npm run clean
-      - run: npm run compile
-      - run: npm run test
-      - run: npm run deploy
+      # - run: npm install
+      # - run: npm run clean
+      # - run: npm run compile
+      # - run: npm run test
+      # - run: npm run deploy
       # - run: npm run start
       
