@@ -87,6 +87,7 @@ contract CrowdCharity {
         uint _fundedAmountInDai = _swapExactInputSingle(campaigns[_campaignId].owner);
         
         funderAmount[_campaignId][msg.sender] += _fundedAmountInDai;
+        campaigns[_campaignId].raisedAmount += _fundedAmountInDai;
         rewardContract.mint(msg.sender, 0, msg.value);
 
         emit Funded(
@@ -111,11 +112,10 @@ contract CrowdCharity {
         address _inputToken
     ) internal returns (uint _OutputAmount) {
         // transfer input Token to this contract
-        require(IERC20(_inputToken).transferFrom(msg.sender, address(this), _inputAmount),
-            "Your tokens transfer to this contract failed");
+        require(IERC20(_inputToken).transferFrom(msg.sender, address(this), _inputAmount), "Your tokens transfer to this contract failed");
         // approve Uniswap router to spend this contract input Token balance 
-        require(IERC20(_inputToken).approve(address(SWAPROUTER), _inputAmount),
-            "Couldn't approve Uniswap router to spend this contract tokens");
+        require(IERC20(_inputToken).approve(address(SWAPROUTER), _inputAmount), "Couldn't approve Uniswap router to spend this contract tokens");
+
         ISwapRouter.ExactInputParams memory params = ISwapRouter
             .ExactInputParams({
                 path: _path,
@@ -141,14 +141,23 @@ contract CrowdCharity {
         require(campaigns[_campaignId].isOpen == true, "Sadly the campaign is closed by its owner");
         require(campaigns[_campaignId].owner != msg.sender, "Campaign owner can't fund the campaign");
         
-        uint _fundedAmountInDai = _swapExactInputMultihop(
-            _inputAmount,
-            campaigns[_campaignId].owner,
-            _path,
-            _inputToken
-        );
-        funderAmount[_campaignId][msg.sender] += _fundedAmountInDai;
+        uint _fundedAmountInDai;
 
+        if (_inputToken != DAI){
+            _fundedAmountInDai = _swapExactInputMultihop(
+                _inputAmount,
+                campaigns[_campaignId].owner,
+                _path,
+                _inputToken
+            );
+        }
+        else {
+            require(IERC20(_inputToken).transferFrom(msg.sender, campaigns[_campaignId].owner, _inputAmount), "Your tokens transfer to campaign owner failed");
+            _fundedAmountInDai = _inputAmount;
+        }
+
+        funderAmount[_campaignId][msg.sender] += _fundedAmountInDai;
+        campaigns[_campaignId].raisedAmount += _fundedAmountInDai;
         rewardContract.mint(msg.sender, 0, msg.value);
 
         emit Funded(
@@ -159,6 +168,25 @@ contract CrowdCharity {
         );
     }
 
+    /** @notice Function to fund a campaign.
+      * @param _campaignId defines the index of targeted campaign  
+      */    
+    function fundCampaignIn(uint _campaignId) external payable{
+        require(campaigns[_campaignId].isOpen == true, "Sadly the campaign is closed by the its owner");
+        require(campaigns[_campaignId].owner != msg.sender, "Campaign owner can't fund the campaign");
+        require(campaigns[_campaignId].owner.send(msg.value), "transfering funds error");
+        funderAmount[_campaignId][msg.sender] += msg.value;
+        campaigns[_campaignId].raisedAmount += msg.value;
+
+        rewardContract.mint(msg.sender, 0, msg.value);
+
+        emit Funded(
+            _campaignId,
+            msg.value,
+            msg.sender,
+            campaigns[_campaignId].owner
+        );
+    }
 
     /** @notice Function to start a new campaign.
       * @param _campaignTarget defines the goal amount need to be raised  
@@ -232,7 +260,7 @@ contract CrowdCharity {
 
 // Just for testing
     address public constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
-    function single_Swap_For_Testing(address _recipient)
+    function single_Swap_For_Testing(address _recipient, address _tokenOut)
         external
         payable
         returns (uint _OutputAmount)
@@ -243,7 +271,7 @@ contract CrowdCharity {
         ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
         .ExactInputSingleParams({
             tokenIn: WETH9,
-            tokenOut: USDC,
+            tokenOut: _tokenOut,
             // pool fee 0.05%
             fee: 500,
             recipient: _recipient,//msg.sender,

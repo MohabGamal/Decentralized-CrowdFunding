@@ -94,7 +94,11 @@ async function main() {
   const crowdCharity = await CrowdCharity.deploy()
   await crowdCharity.connect(accounts[0]).createCampaign(100)
 
-  //Swap Single
+  ///////////////////////
+  //                   //
+  //    Swap Single    //
+  //                   //
+  ///////////////////////
   await crowdCharity.connect(accounts[1]).fundCampaignWithEth(1, {value:  10n ** 18n})
 
   /////////////////////////
@@ -108,14 +112,38 @@ async function main() {
   // console.log(encodedPath)
   inputToken = await ethers.getContractAt("IERC20", path[0])
   inputAmount = 1000
+
+  /////////////////////////
+  //                     //
+  //    USDC to DAI      //
+  //                     //
+  /////////////////////////
   // generate USDC coins for address1 just for testing
-  await crowdCharity.connect(accounts[1]).single_Swap_For_Testing(accounts[1].address, {value:  10n ** 18n})
-  console.log("USDC:", await usdc.balanceOf(accounts[1].address))
+      await crowdCharity.connect(accounts[0]).single_Swap_For_Testing(accounts[1].address, USDC, {value:  10n ** 18n}) // USDC
+      // console.log("USDC:", await usdc.balanceOf(accounts[1].address))
   // approve contract to use this USDC amount
-  await inputToken.connect(accounts[1]).approve(crowdCharity.address, inputAmount)
-  await crowdCharity.connect(accounts[1]).fundCampaignWithToken(1, inputAmount, encodedPath, path[0])
-  // funderAmount should increase by the equivalent DAI amount of USDC input
+      await inputToken.connect(accounts[1]).approve(crowdCharity.address, inputAmount)
+  // fund with USDC
+      await crowdCharity.connect(accounts[1]).fundCampaignWithToken(1, inputAmount, encodedPath, path[0])
+    
+  ////////////////////////
+  //                    //
+  //    DAI directly    //
+  //                    //
+  ////////////////////////
+
+  // generate DAI coins for address1 just for testing
+      await crowdCharity.connect(accounts[0]).single_Swap_For_Testing(accounts[1].address, DAI, {value:  10n ** 18n}) // DAI
+      // console.log("DAI:", await dai.balanceOf(accounts[1].address))
+  // approve contract to use this DAI amount
+      await dai.connect(accounts[1]).approve(crowdCharity.address, inputAmount)
+  //  fund with DAI
+      await crowdCharity.connect(accounts[1]).fundCampaignWithToken(1, inputAmount, [], path[1])
+
+
+  // funderAmount should increase in DAI 
   console.log("DAI:", await crowdCharity.funderAmount(1, accounts[1].address));
+
   
     
 }
