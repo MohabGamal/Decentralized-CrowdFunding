@@ -8,7 +8,9 @@
     "test": "npx hardhat test",
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile",
-    "deploy": "npx hardhat run scripts/deploy.js"
+    "deploy": "npx hardhat run scripts/deploy.js",
+    "swapTry": "npx hardhat run scripts/swapTry.js --network localhost",
+    "mainnet-fork": "npx hardhat node --fork https://eth-mainnet.g.alchemy.com/v2/GIfIAbfkr4GX1CKh8mZ-y1lYzPobbb3P"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +26,8 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.3",
     "@openzeppelin/hardhat-upgrades": "^1.21.0",
+    "@uniswap/v3-core": "^1.0.1",
+    "@uniswap/v3-periphery": "^1.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
