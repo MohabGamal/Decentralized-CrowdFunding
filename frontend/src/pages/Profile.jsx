@@ -1,20 +1,20 @@
-import { useFetch } from "../hooks";
+import { useFetch } from '../hooks'
 
-import { DisplayCampaigns, UserRewards } from "../components";
-import { useStateContext } from "../context";
+import { DisplayCampaigns, UserRewards } from '../components'
+import { useStateContext } from '../context'
 
 const Profile = () => {
-  const { address } = useStateContext();
+  const { address } = useStateContext()
 
   const {
     data: campaigns,
     loading: isCampaignsLoading,
-    error: campaignsError,
+    error: campaignsError
   } = useFetch(
     `http://localhost:8080/api/v1/campaigns/profiles/${address}`,
     {},
     [address]
-  );
+  )
 
   return (
     <>
@@ -24,13 +24,16 @@ const Profile = () => {
             Your Profile:
           </h1>
           <div className="flex items-center mb-5 break-all">
-            <h4 className="font-epilogue text-[15px] text-white">{address}</h4>
+            <h4 className="font-epilogue text-[15px] dark:text-white">
+              {address}
+            </h4>
             <UserRewards address={address} />
           </div>
           <DisplayCampaigns
             title="Campaigns You contributed in:"
             isLoading={isCampaignsLoading}
             campaigns={campaigns}
+            campaignsCount={campaigns?.length}
           />
         </div>
       ) : (
@@ -39,7 +42,7 @@ const Profile = () => {
         </p>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile

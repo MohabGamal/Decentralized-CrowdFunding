@@ -1,5 +1,5 @@
-import { mongooseDisconnect } from '../config/mongoose.js'
-import logger from './logger.js';
+import { mongooseDisconnect } from '../config/index.config.js'
+import logger from '../config/logger.config.js'
 
 const isServerShuttingDown = false
 

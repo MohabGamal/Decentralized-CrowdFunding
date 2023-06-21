@@ -9,21 +9,20 @@ export const campaignCreationSchema = Joi.object({
   desc: Joi.string().required(),
   category: Joi.string().required(),
   message: Joi.string(),
-  featured: Joi.boolean(),
+  featured: Joi.boolean()
 })
 
 export const campaignQuerySchema = Joi.object({
-  limit: Joi.number().integer().min(1).default(2),
-  page: Joi.number().integer().min(1).default(1),
+  q: Joi.string().empty('').default(' ')
 })
 
 export const campaignUpdateSchema = Joi.object({
   desc: Joi.string(),
   message: Joi.string(),
   category: Joi.string(),
-  featured: Joi.boolean(),
+  featured: Joi.boolean()
 })
 
 export const campaignIdSchema = Joi.object({
-  campaignId: Joi.number().integer().min(0).required(),
+  campaignId: Joi.number().integer().min(0).required()
 })

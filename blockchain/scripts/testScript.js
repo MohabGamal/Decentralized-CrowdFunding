@@ -1,21 +1,30 @@
 const main = async () => {
   const crowdcharity = await ethers.getContractAt(
     'CrowdCharity',
-    '0xa195ACcEB1945163160CD5703Ed43E4f78176a54',
+    '0x4CF4dd3f71B67a7622ac250f8b10d266Dc5aEbcE'
   )
   const charityrewards = await ethers.getContractAt(
     'CharityRewards',
-    '0xFccd14557329cf11e7cC35c4e2BD4eB19E88f885',
+    '0x56d91Ff187F9484f67d06F489a3Ca7893031F27f'
   )
 
-  const [_, __, add3, add4] = await ethers.getSigners()
-  await crowdcharity
-    .connect(add4)
-    .fundCampaignWithEth(0, { value: ethers.utils.parseEther('1') })
-  await crowdcharity
-    .connect(add4)
-    .fundCampaignWithEth(1, { value: ethers.utils.parseEther('1') })
-  console.log('add4: ', add4.address)
+  const DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+  const dai = await ethers.getContractAt('IERC20', DAI)
+
+  const [add1, add2, add3, add4] = await ethers.getSigners()
+  // await crowdcharity
+  //   .connect(add3)
+  //   .fundInEth(0, { value: ethers.utils.parseEther('0.01') }) //16.68
+  // await crowdcharity
+  //   .connect(add4)
+  //   .fundInEth(1, { value: ethers.utils.parseEther('1') })
+
+  // await crowdcharity.connect(add2).withdrawFunds(1)
+  // await crowdcharity.connect(add4).refund(1)
+  // console.log(await charityrewards.balanceOf(add1.address, 1) / 10 ** 18)
+  // console.log(await dai.balanceOf(add3.address) / 1e18)
+  // console.log(await crowdcharity.fundersContributions(1, add4.address) / 1e18)
+  console.log(await crowdcharity.campaigns(0))
 
   // console.log(await crowdcharity.campaignsCount())
   // console.log(await crowdcharity.getCampaignsByIds([0]))
@@ -27,13 +36,12 @@ const main = async () => {
   // const campaigns = await crowdcharity.getCampaignsByIds(campaignsIds)
   // console.log(campaigns)
 
-  console.log(await charityrewards.balanceOf('0x90F79bf6EB2c4f870365E785982E1f101E93b906', 0)) // add4
   // console.log(await charityrewards.tokensCount());
 }
 
 main()
   .then(() => process.exit(0))
-  .catch(error => {
+  .catch((error) => {
     console.error(error)
     process.exit(1)
   })

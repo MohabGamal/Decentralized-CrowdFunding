@@ -9,22 +9,20 @@
     "server/*"
   ],
   "scripts": {
-    "dev": "concurrently \"cd blockchain && npm run dev\" \"cd server && npm run dev\" \"cd frontend && npm run dev\""
+    "dev": "concurrently \"npm run dev --prefix blockchain\" \"npm run dev --prefix server\" \"npm run dev --prefix frontend\"",
+    "deploy": "npm run install --only=production && npm run build --prefix frontend && npm run start --prefix server"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MohabGamal/Decentralized-CrowdFunding.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Mohab Gamal",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/MohabGamal/Decentralized-CrowdFunding/issues"
   },
   "homepage": "https://github.com/MohabGamal/Decentralized-CrowdFunding#readme",
-  "dependencies": {
-    "dotenv": "^16.0.3"
-  },
   "devDependencies": {
     "concurrently": "^8.0.1"
   }
