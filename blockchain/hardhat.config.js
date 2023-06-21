@@ -15,16 +15,16 @@ module.exports = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 200,
-      },
-    },
+        runs: 200
+      }
+    }
   },
   networks: {
     hardhat: {
       chainId: 1337,
       forking: {
-        url: process.env.ALCHEMY_API_URL,
-      },
-    },
-  },
+        url: process.env.ALCHEMY_API_URL
+      }
+    }
+  }
 }

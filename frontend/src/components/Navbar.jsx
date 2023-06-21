@@ -2,23 +2,31 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { useStateContext } from '../context'
-import { CustomButton } from './'
-import { logo, menu, search, thirdweb, profile } from '../assets'
+import { CustomButton, MetMaskButton } from './'
+import { logo, menu, search, profile, moon, sun } from '../assets'
 import { navlinks } from '../constants'
 
 const Navbar = () => {
   const navigate = useNavigate()
+  const { toggleDarkMode } = useStateContext()
   const [isActive, setIsActive] = useState('dashboard')
   const [toggleDrawer, setToggleDrawer] = useState(false)
-  const { connect, address } = useStateContext()
+  const { connect, address, setSearchQuery, setPage } = useStateContext()
+
+  function handleSearch(Searchquery) {
+    setPage(1)
+    setSearchQuery(Searchquery)
+    navigate('/')
+  }
 
   return (
-    <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
-      <div className="lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px]">
+    <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6 ">
+      <div className="lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-light dark:bg-dark rounded-[100px]">
         <input
           type="text"
           placeholder="Search for campaigns"
-          className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none"
+          onChange={(event) => handleSearch(event.target.value)}
+          className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] dark:text-white bg-transparent outline-none"
         />
 
         <div className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer">
@@ -30,56 +38,62 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="sm:flex hidden flex-row justify-end gap-4">
-        <CustomButton
-          btnType="button"
-          title={address ? 'Create a campaign' : 'Connect'}
-          styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'}
-          handleClick={() => {
-            if (address) navigate('create-campaign')
-            else connect()
-          }}
-        />
-
-        <Link to="/profile">
-          <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
-            <img
-              src={profile}
-              alt="user"
-              className="w-[60%] h-[60%] object-contain"
+      <div className="flex-row justify-end hidden gap-4 sm:flex">
+        {address ? (
+          <>
+            <CustomButton
+              btnType="button"
+              title="Create a campaign"
+              styles="bg-[#1dc071]"
+              handleClick={() => navigate('create-campaign')}
             />
-          </div>
-        </Link>
+            <Link to="/profile">
+              <div className="w-[52px] hover:scale-105 rounded-full grayscale bg-green-300 dark:bg-[#2c2f32] flex justify-center items-center cursor-pointer h-[52px]">
+                <img
+                  src={profile}
+                  alt="user"
+                  className="w-[60%] h-[60%] object-contain"
+                />
+              </div>
+            </Link>
+          </>
+        ) : (
+          <MetMaskButton />
+        )}
       </div>
 
       {/* Small screen navigation */}
-      <div className="sm:hidden flex justify-between items-center relative">
+      <div className="relative flex items-center justify-between sm:hidden">
         <Link
           to="/"
           className="w-[80px] h-[50px] rounded-[10px] flex justify-center items-center cursor-pointer"
         >
-          <img src={logo} alt="user" className="w-full h-full" />
+          <img
+            src={logo}
+            alt="user"
+            className="w-full h-full hover:scale-110 "
+          />
         </Link>
 
         <img
           src={menu}
           alt="menu"
           className="w-[34px] h-[34px] object-contain cursor-pointer"
-          onClick={() => setToggleDrawer(prev => !prev)}
+          onClick={() => setToggleDrawer((prev) => !prev)}
         />
 
         <div
-          className={`absolute top-[60px] right-0 left-0 bg-[#1c1c24] z-10 shadow-secondary py-4 ${
+          className={`absolute top-[60px] right-0 left-0 bg-light dark:bg-[#1c1c24] z-10 shadow-secondary py-4 ${
             !toggleDrawer ? '-translate-y-[100vh]' : 'translate-y-0'
           } transition-all duration-700`}
         >
           <ul className="mb-4">
-            {navlinks.map(link => (
+            {navlinks.map((link) => (
               <li
                 key={link.name}
                 className={`flex p-4 ${
-                  isActive === link.name && 'bg-[#3a3a43]'
-                }`}
+                  isActive === link.name && 'bg-green-200 dark:bg-[#3a3a43]'
+                } cursor-pointer hover:bg-green-200 dark:hover:bg-[#3a3a43]`}
                 onClick={() => {
                   setIsActive(link.name)
                   setToggleDrawer(false)
@@ -102,13 +116,26 @@ const Navbar = () => {
                 </p>
               </li>
             ))}
+            <li
+              onClick={() => {
+                toggleDarkMode()
+                setToggleDrawer(false)
+              }}
+              className="flex p-4 justify-center bg-[#dad2d2] dark:bg-[#222226] cursor-pointer hover:bg-[#67676872] dark:hover:bg-[#262629]"
+            >
+              <img
+                src={localStorage.theme === 'dark' ? sun : moon}
+                alt={localStorage.theme === 'dark' ? 'sun' : 'moon'}
+                className="w-[24px] h-[24px] object-contain"
+              ></img>
+            </li>
           </ul>
 
           <div className="flex mx-4">
             <CustomButton
               btnType="button"
               title={address ? 'Create a campaign' : 'Connect'}
-              styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]'}
+              styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]  w-full'}
               handleClick={() => {
                 if (address) navigate('create-campaign')
                 else connect()
