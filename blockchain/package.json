@@ -6,28 +6,28 @@
   "scripts": {
     "test": "npx hardhat test",
     "clean": "npx hardhat clean",
+    "dev": "npx hardhat node",
     "compile": "npx hardhat compile",
     "deploy": "npx hardhat run scripts/deploy.js --network localhost",
-    "deploy-mainnet": "npx hardhat run scripts/deploy.js --network mainnet",
+    "deploy:CI": "npx hardhat run scripts/deploy.js",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.js --network mainnet",
     "testScript": "npx hardhat run scripts/testScript.js --network localhost",
-    "swapTry": "npx hardhat run scripts/swapTry.js --network localhost",
-    "dev": "npx hardhat node"
+    "swapTry": "npx hardhat run scripts/swapTry.js --network localhost"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.1.1",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
-    "chai": "^4.3.6",
-    "ethereum-waffle": "^3.4.4",
-    "ethers": "^5.7.1",
-    "solidity-coverage": "^0.8.2"
-  },
-  "dependencies": {
     "@openzeppelin/contracts": "^4.7.3",
     "@openzeppelin/hardhat-upgrades": "^1.21.0",
     "@uniswap/v3-core": "^1.0.1",
-    "@uniswap/v3-periphery": "^1.4.3"
+    "@uniswap/v3-periphery": "^1.4.3",
+    "chai": "^4.3.6",
+    "dotenv": "^16.3.1",
+    "ethereum-waffle": "^4.0.10",
+    "ethers": "^5.7.1",
+    "solidity-coverage": "^0.7.22"
   }
 }

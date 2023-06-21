@@ -1,178 +1,176 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Web3Storage } from 'web3.storage';
-import axios from 'axios';
+import axios from 'axios'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { parseEther } from 'ethers/lib/utils'
 
-import { useStateContext } from '../context';
-// import { money } from '../assets';
-import { CustomButton, FormField, Loader } from '../components';
-
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useStateContext } from '../context'
+import { CustomButton, FormField, Loader, MetMaskButton } from '../components'
+import { JoiValidate, formatError } from './../utils'
+import { campaignIdSchema, campaignCreateSchema } from '../validators/campaigns'
+import { imagePlaceholder, metamask } from '../assets'
 
 const CreateCampaign = () => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState(false)
+  const [chosenImage, setChosenImage] = useState(imagePlaceholder)
 
   const [form, setForm] = useState({
-    name: '',
     title: '',
     category: '',
-    description: '',
+    desc: '',
     message: '',
     target: '',
-    deadline: '',
-    image: {},
-  });
-  const { mainContract, signer ,address, connect } = useStateContext();
+    softcap: '',
+    image: {}
+  })
 
+  const { campaignContract, signer, address, connect } = useStateContext()
 
   const handleFormFieldChange = (fieldName, e) => {
-    // setForm({ ...form, [fieldName]: e.target.value,  })
-    if (fieldName === 'image') {
-      setForm({ ...form, ['image']: e.target.files });
-    } else {
-      setForm({ ...form, [fieldName]: e.target.value });
-    }
-  };
+    const { value, files } = e.target
 
+    if (fieldName === 'image') {
+      if (files && files[0]?.type.startsWith('image/')) {
+        setForm({ ...form, ['image']: files })
+        setChosenImage(URL.createObjectURL(files[0]))
+      } else {
+        toast.error('Only images are allowed!')
+      }
+    } else {
+      setForm({ ...form, [fieldName]: value })
+    }
+  }
 
   const uploadToIpfs = async (image) => {
+    const formData = new FormData()
+    formData.append('file', image[0])
+
+    const imageUrl = await axios.post(
+      `http://localhost:8080/api/v1/campaigns/uploadImage`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    )
+    return imageUrl.data
+  }
+
+  const contractCreateCampaign = async (target, softcap, title, imageUrl) => {
+    const tx = await campaignContract
+      .connect(signer)
+      .createCampaign(
+        parseEther(target.toString()),
+        parseEther(softcap.toString()),
+        1,
+        title,
+        imageUrl
+      )
+    const receipt = await tx.wait()
+    const startedEvent = receipt.events.find(
+      (event) => event.event === 'Started'
+    )
+    const { campaignId } = JoiValidate(campaignIdSchema, {
+      campaignId: parseInt(startedEvent.args.campaignId)
+    })
+    return campaignId
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+
     try {
-      const client = new Web3Storage({
-        token:
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweEY4YTcwOGY0NTI5MTdlZGMwNDU2N0Q2MzlDZjlmMEYxMTlFYjAwOTAiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NzkxNjUxNjQ0NDMsIm5hbWUiOiJDcm93ZEZ1bmRpbmcifQ.iUossDvt3UX5-QCoZHG5wqCBzUaoRauFFNx4FfNnwwk',
-      });
-      const cid = await client.put(image);
-      // const imgUrl = `https://dweb.link/ipfs/${cid}`;
-      console.log('image cid', cid);
-      return cid;
-    } catch (error) {
-      console.log('No image selected', error);
-    }
-  };
+      const validatedForm = JoiValidate(campaignCreateSchema, form)
+      const { target, softcap, title, desc, category, message, image } =
+        validatedForm
 
-  const createCampaign = async (
-    target,
-    title,
-    desc,
-    category,
-    message,
-    image
-  ) => {
-    try {
-      const cid = await uploadToIpfs(image);
-      const encodedImageName = encodeURIComponent(image[0].name);
-      const imageUrl = `http://${cid}.ipfs.dweb.link/${encodedImageName}`;
+      if (softcap > target) throw new Error('Softcap must be less than target!')
 
-      const tx = await mainContract
-        .connect(signer)
-        .createCampaign(target, title, imageUrl);
-      const receipt = await tx.wait();
-
-      const startedEvent = receipt.events.find(
-        (event) => event.event === 'Started'
-      );
-      const campaignId = Number(startedEvent.args.campaignId);
+      const imageUrl = await uploadToIpfs(image)
+      const campaignId = await contractCreateCampaign(
+        target,
+        softcap,
+        title,
+        imageUrl
+      )
+      if (campaignId == undefined) return
 
       await axios.post(`http://localhost:8080/api/v1/campaigns/`, {
         campaignId,
         desc,
         category,
-        message,
-      });
+        message
+      })
 
-      return true;
+      toast.success('Campaign created successfully!')
+      navigate(`/campaign-details/${campaignId}/${encodeURIComponent(title)}`)
     } catch (error) {
-      console.error(error);
-      return false;
+      toast.error(formatError(error))
+    } finally {
+      setIsLoading(false)
     }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const success = await createCampaign(
-      form.target,
-      form.title,
-      form.description,
-      form.category,
-      form.message,
-      form.image
-    );
-
-    if (success) {
-      toast.success('Campaign Created!');
-      navigate('/');
-    } else {
-      toast.error('Campaign Creation Failed!');
-    }
-    setIsLoading(false);
-
-    // checkIfImage(form.image, async (exists) => {
-    //   if(exists) {
-    //     setIsLoading(true)
-    //     // await createCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18)})
-    //     await createCampaign(form)
-    //     setIsLoading(false);
-    //     navigate('/');
-    //   } else {
-    //     alert('Provide valid image URL')
-    //     setForm({ ...form, image: '' });
-    //   }
-    // })
-  };
-
+  }
 
   return (
-    <div className='bg-[#1c1c24] flex justify-center items-center flex-col rounded-[10px] sm:p-10 p-4'>
+    <div className="bg-light dark:bg-[#1c1c24] flex justify-center items-center flex-col rounded-[10px] sm:p-10 p-4">
       {isLoading && <Loader />}
-      <div className='flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#3a3a43] rounded-[10px]'>
-        <h1 className='font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white'>
+      <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#717171] rounded-[10px]">
+        <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">
           Start a Campaign
         </h1>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className='w-full mt-[65px] flex flex-col gap-[30px]'>
-        <div className='flex flex-wrap gap-[40px]'>
-          {/* <FormField 
-            labelName="Your Name *"
-            placeholder="John Doe"
-            inputType="text"
-            value={form.name}
-            handleChange={(e) => handleFormFieldChange('name', e)}
-          /> */}
+        className="w-full mt-[65px] flex flex-col gap-[30px]"
+      >
+        <div className="flex flex-wrap gap-[40px]">
           <FormField
-            labelName='Campaign Title *'
-            placeholder='Write a title'
-            inputType='text'
+            labelName="Campaign Title *"
+            placeholder="Write a title"
+            inputType="text"
             value={form.title}
             handleChange={(e) => handleFormFieldChange('title', e)}
           />
           <FormField
-            labelName='Campaign Category *'
-            placeholder='Write one'
-            inputType='text'
+            labelName="Campaign Category *"
+            placeholder="Write one"
+            inputType="text"
             value={form.category}
             handleChange={(e) => handleFormFieldChange('category', e)}
           />
         </div>
-
+        <div className="flex flex-wrap gap-[40px]">
+          <FormField
+            labelName="Goal *"
+            placeholder="100$"
+            inputType="number"
+            value={form.target}
+            handleChange={(e) => handleFormFieldChange('target', e)}
+          />
+          <FormField
+            labelName="Softcap *"
+            placeholder="50$"
+            inputType="number"
+            value={form.softcap}
+            handleChange={(e) => handleFormFieldChange('softcap', e)}
+          />
+        </div>
         <FormField
-          labelName='Story *'
-          placeholder='Write your story'
+          labelName="Story *"
+          placeholder="Write your story"
           isTextArea
-          value={form.description}
-          handleChange={(e) => handleFormFieldChange('description', e)}
+          value={form.desc}
+          handleChange={(e) => handleFormFieldChange('desc', e)}
         />
         <FormField
-          labelName='Short Message'
-          placeholder='please...'
+          labelName="Short Message"
+          placeholder="please..."
           isNotRequired
-          inputType='text'
+          inputType="text"
           value={form.message}
           handleChange={(e) => handleFormFieldChange('message', e)}
         />
@@ -181,62 +179,52 @@ const CreateCampaign = () => {
           <h4 className="font-epilogue font-bold text-[25px] text-white ml-[20px]">You will get 100% of the raised amount</h4>
         </div> */}
 
-        <div className='flex flex-wrap gap-[40px]'>
-          <FormField
-            labelName='Goal *'
-            placeholder='ETH 0.50'
-            inputType='text'
-            value={form.target}
-            handleChange={(e) => handleFormFieldChange('target', e)}
-          />
-          {/* <FormField 
-            labelName="Message *"
-            placeholder="please..."
-            inputType="text"
-            value={form.deadline}
-            handleChange={(e) => handleFormFieldChange('deadline', e)}
-          /> */}
-        </div>
-
-        {/* <FormField 
-            labelName="Campaign image *"
-            placeholder="Place image URL of your campaign"
-            inputType="url"
-            value={form.image}
-            handleChange={(e) => handleFormFieldChange('image', e)}
-          /> */}
-
-        <FormField
-          labelName='Campaign image *'
-          inputType='file'
+        {/* <FormField
+          labelName="Campaign image *"
+          inputType="file"
+          isImage
           handleChange={(e) => handleFormFieldChange('image', e)}
-        />
+        /> */}
+        <label className="flex flex-col flex-1 w-full">
+          <span className="font-epilogue font-medium text-[14px] leading-[22px] dark:text-[#808191] mb-[10px]">
+            Campaign image *
+          </span>
+          <div className="flex items-center space-x-6 cursor-pointer">
+            <div className="shrink-0">
+              <img
+                className="object-cover w-20 h-20 rounded-full"
+                src={chosenImage}
+                alt="Chosen campaign image"
+              />
+            </div>
+            <div className="block">
+              <input
+                required
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFormFieldChange('image', e)}
+                className="block w-full text-sm text-slate-700 dark:text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#3d8663] file:text-white hover:file:bg-green-700"
+              />
+            </div>
+          </div>
+        </label>
 
-        <div className='flex justify-center items-center mt-[40px]'>
-          {/* <CustomButton 
-            btnType="submit"
-            title="Submit new campaign"
-            styles="bg-[#1dc071]"
-          /> */}
+        <div className="flex justify-center items-center mt-[10px] px-5">
           {address ? (
             <CustomButton
-              btnType='submit'
-              title='Submit new campaign'
-              styles='bg-[#1dc071]'
+              btnType="submit"
+              title="Submit new campaign"
+              styles="bg-[#1dc071]"
+              handleClick={handleSubmit}
             />
           ) : (
-            <CustomButton
-              btnType='button'
-              title='Connect'
-              styles='w-full bg-[#8c6dfd]'
-              handleClick={connect}
-            />
+            <MetMaskButton />
           )}
-          <button onClick={handleSubmit}></button>
+          {/* <button onClick={handleSubmit}></button> */}
         </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default CreateCampaign;
+export default CreateCampaign

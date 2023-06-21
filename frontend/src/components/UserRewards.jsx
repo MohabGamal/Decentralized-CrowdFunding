@@ -1,55 +1,75 @@
-import { useFetch } from "../hooks";
+import { useFetch } from '../hooks'
 
 function UserRewards({ address }) {
   const {
-    data: rewards,
-    loading: isRewardsLoading,
-    error: rewardsError,
-  } = useFetch("http://localhost:8080/api/v1/rewards/");
+    data: rewardTokens,
+    loading: isRewardTokensLoading,
+    error: rewardTokensError
+  } = useFetch('http://localhost:8080/api/v1/rewards/')
 
   const {
-    data: userRewards,
-    loading: isUserRewardsLoading,
-    error: userRewardsError,
+    data: userRewardsBalances,
+    loading: isUserRewardsBalancesLoading,
+    error: userRewardsBalancesError
   } = useFetch(
     `http://localhost:8080/api/v1/rewards/profiles/${address}/`,
     {},
     [address]
-  );
-
+  )
   return (
     <>
-      {userRewards && rewards && (
-        <div className="flex">
-          {userRewards["FPbalance"] > 0 && (
-            <div className="group relative ">
+      {userRewardsBalances?.map((userBalance, i) => {
+        if (userBalance > 0)
+          return (
+            <div key={i} className="relative flex group">
               <img
-                src={rewards["FPtoken"]?.uri}
-                alt="FPtoken"
-                className="w-[30px] h-[35px] ml-1 cursor-pointer"
+                src={rewardTokens[i]?.uri}
+                alt={rewardTokens[i]?.name}
+                className="w-[30px] h-[35px] ml-1 cursor-pointer hover:scale-105"
               />
-              <span className="pointer-events-none  text-white absolute -top-7 right-0 w-max opacity-0 transition-opacity group-hover:opacity-100">
-                {userRewards["FPbalance"]} {rewards["FPtoken"]?.name}
+              <span className="absolute right-0 transition-opacity opacity-0 pointer-events-none dark:text-white -top-7 w-max sm:group-hover:opacity-100">
+                {userBalance} {rewardTokens[i]?.name}
               </span>
             </div>
-          )}
-
-          {userRewards["SPbalance"] > 0 && (
-            <div className="group relative">
-              <img
-                src={rewards["SPtoken"]?.uri}
-                alt=""
-                className="w-[40px] h-[40px] cursor-pointer "
-              />                                                            {/** left-0  */}
-              <span className="pointer-events-none text-white absolute -top-7 right-0 w-max opacity-0 transition-opacity group-hover:opacity-100">
-                {userRewards["SPbalance"]} {rewards["SPtoken"]?.name}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
+          )
+      })}
     </>
-  );
+  )
+
+  // return (
+  //   <>
+  //     {userRewards && rewards && (
+  //       <div className="flex">
+  //         {userRewards['FPbalance'] > 0 && (
+  //           <div className="relative group ">
+  //             <img
+  //               src={rewards['FPtoken']?.uri}
+  //               alt="FPtoken"
+  //               className="w-[30px] h-[35px] ml-1 cursor-pointer"
+  //             />
+  //             <span className="absolute right-0 transition-opacity opacity-0 pointer-events-none dark:text-white -top-7 w-max group-hover:opacity-100">
+  //               {userRewards['FPbalance']} {rewards['FPtoken']?.name}
+  //             </span>
+  //           </div>
+  //         )}
+
+  //         {userRewards['SPbalance'] > 0 && (
+  //           <div className="relative group">
+  //             <img
+  //               src={rewards['SPtoken']?.uri}
+  //               alt=""
+  //               className="w-[40px] h-[40px] cursor-pointer "
+  //             />{' '}
+  //             {/** left-0  */}
+  //             <span className="absolute right-0 transition-opacity opacity-0 pointer-events-none dark:text-white -top-7 w-max group-hover:opacity-100">
+  //               {userRewards['SPbalance']} {rewards['SPtoken']?.name}
+  //             </span>
+  //           </div>
+  //         )}
+  //       </div>
+  //     )}
+  //   </>
+  // )
 }
 
-export default UserRewards;
+export default UserRewards

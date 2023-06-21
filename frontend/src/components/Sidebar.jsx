@@ -1,41 +1,47 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { logo, sun } from '../assets'
+import { logo, moon, sun } from '../assets'
 import { navlinks } from '../constants'
+import { useStateContext } from '../context'
 
-const Icon = ({ styles, name, imgUrl, isActive, handleClick }) => (
-  <div
-    className={`w-[48px] h-[48px] rounded-[10px] ${
-      isActive && isActive === name && 'bg-[#2c2f32]'
-    } flex justify-center items-center cursor-pointer ${styles}`}
-    onClick={handleClick}
-  >
-    {!isActive ? (
-      <img src={imgUrl} alt="fund_logo" className="w-1/2 h-1/2" />
-    ) : (
-      <img
-        src={imgUrl}
-        alt="fund_logo"
-        className={`w-1/2 h-1/2 ${isActive !== name && 'grayscale'}`}
-      />
-    )}
-  </div>
-)
-
+// #e4dfdf
 const Sidebar = () => {
   const navigate = useNavigate()
+  const { toggleDarkMode } = useStateContext()
   const [isActive, setIsActive] = useState('dashboard')
 
-  return (
-    <div className="flex justify-between flex-col sticky h-[93vh] gap-8">
-      <Link to="/" className="w-[100px] h-[50px] mt-1">
-        <img src={logo} alt="fund_logo" className={`w-full h-full`} />
-      </Link>
+  const Icon = ({ styles, name, imgUrl, isActive, handleClick }) => (
+    <div
+      className={`w-[48px] h-[48px] rounded-[10px] ${
+        isActive && isActive === name && 'bg-green-200 dark:bg-[#2c2f32]' // #ffffff
+      } flex justify-center items-center cursor-pointer hover:scale-110 ${styles}`}
+      onClick={handleClick}
+    >
+      {!isActive ? (
+        <img src={imgUrl} alt="fund_logo" className="w-1/2 h-1/2" />
+      ) : (
+        <img
+          src={imgUrl}
+          alt="fund_logo"
+          className={`w-1/2 h-1/2 ${isActive !== name && 'grayscale'}`}
+        />
+      )}
+    </div>
+  )
 
-      <div className="flex-1 flex flex-col justify-between items-center bg-[#1c1c24] rounded-[20px] w-[76px] py-4">
-        <div className="flex flex-col justify-center items-center gap-3">
-          {navlinks.map(link => (
+  return (
+    <div className="flex justify-between flex-col sticky h-[93vh] top-3">
+      <Link to="/" className="w-full h-[55px] mb-6">
+        <img
+          src={logo}
+          alt="fund_logo"
+          className={'w-full h-full  hover:scale-110 '}
+        />
+      </Link>
+      <div className="flex-1 flex flex-col justify-between items-center bg-light dark:bg-dark rounded-[20px] w-[76px] py-4">
+        <div className="flex flex-col items-center justify-center gap-3">
+          {navlinks.map((link) => (
             <Icon
               key={link.name}
               {...link}
@@ -47,8 +53,11 @@ const Sidebar = () => {
             />
           ))}
         </div>
-
-        <Icon styles="bg-[#1c1c24] shadow-secondary" imgUrl={sun} />
+        <Icon
+          styles=" bg-light bg-slate-900  dark:bg-gray-800 transition-all duration-300"
+          imgUrl={localStorage.theme === 'dark' ? sun : moon}
+          handleClick={toggleDarkMode}
+        />
       </div>
     </div>
   )

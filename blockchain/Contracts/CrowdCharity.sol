@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
 import './CharityRewards.sol';
@@ -16,60 +16,126 @@ contract CrowdCharity {
         ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     address public constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-    uint256 public campaignsCount = 0;
+    uint public campaignsCount = 0;
 
     struct Campaign {
-        address payable owner;
-        uint256 target;
-        uint256 raisedAmount;
-        uint256 timeStamp;
+        address owner;
+        uint target;
+        uint raisedAmount;
+        uint withdrawnAmount;
+        uint timeStamp;
+        uint rewardTokenId;
+        uint softcap;
         bool isOpen;
         string image;
         string title;
     }
-    //CampaignID =>  (Funder => amount)
-    // mapping (uint => mapping(address => uint)) public funderAmount;
-    // mapping (uint => Campaign) public campaigns;
+    //campaignID => (Funder => amount)
+    mapping(uint => mapping(address => uint)) public fundersContributions;
     Campaign[] public campaigns;
 
     event Started(
         address indexed campaignOwner,
-        uint256 indexed campaignId,
-        uint256 indexed campaignTimestamp,
-        uint256 campaignTarget
+        uint indexed campaignId,
+        uint indexed rewardTokenId,
+        uint campaignTimestamp,
+        uint campaignTarget
     );
 
     event Funded(
-        uint256 indexed campaignId,
-        uint256 fundedAmount,
-        uint256 indexed timestamp,
+        uint indexed campaignId,
+        uint fundedAmount,
+        uint indexed timestamp,
         address indexed funder,
         address campaignOwner
     );
 
     event Closed(
-        uint256 indexed campaignId,
+        uint indexed campaignId,
         address indexed campaignOwner,
-        uint256 indexed timestamp
+        uint indexed timestamp
     );
+
+    event Withdrawn(
+        uint indexed campaignId,
+        address indexed campaignOwner,
+        uint indexed timestamp,
+        uint amount
+    );
+
+    event Refunded(
+        uint indexed campaignId,
+        address indexed campaignOwner,
+        uint indexed timestamp,
+        uint amount
+    );
+
+    modifier campaignIdConstraints(uint campaignId) {
+        require(campaignId < campaignsCount, 'Campaign ID is out of range');
+        require(campaignId >= 0, 'Campaign ID is less than zero');
+        _;
+    }
+
+    /**
+     * @notice Modifier to check if the _fundAmount > 0, the campaign is open and not owned by the funder.
+     * @param _campaignId The id of the campaign to be funded.
+     * @param _fundAmount The amount of DAI to be funded.
+     */
+    modifier fundingConstraints(uint _campaignId, uint _fundAmount) {
+        require(
+            campaigns[_campaignId].isOpen == true,
+            'Sadly the campaign is closed by its owner'
+        );
+        require(
+            campaigns[_campaignId].owner != msg.sender,
+            "Campaign owner can't fund their own campaign"
+        );
+        require(_fundAmount > 0, 'Very small funding amount');
+        _;
+    }
+
+    /**
+     * @notice function to mint rewards, emit Funded event, and update the campaign raised amount.
+     * @param _campaignId The id of the campaign to be funded.
+     * @param _fundedAmountInDai The amount of DAI to be funded.
+     */
+    function _finalizeFunding(
+        uint _campaignId,
+        uint _fundedAmountInDai
+    ) internal {
+        campaigns[_campaignId].raisedAmount += _fundedAmountInDai;
+        fundersContributions[_campaignId][msg.sender] += _fundedAmountInDai;
+
+        rewardContract.mint(
+            msg.sender,
+            campaigns[_campaignId].rewardTokenId,
+            _fundedAmountInDai
+        );
+
+        emit Funded(
+            _campaignId,
+            _fundedAmountInDai,
+            block.timestamp,
+            msg.sender,
+            campaigns[_campaignId].owner
+        );
+    }
 
     /// @notice Swaps a fixed amount of WETH for a maximum possible amount of DAI through Uniswap V3
     /// @dev though uses msg.value it is not a payable function. Hence, Must be called from a payable function
-    /// @param _recipient The address that gets the equivilant DAI of msg.value
     /// @return _OutputAmount the equivilant DAI of msg.value
-    function _swapExactInputSingle(
-        address _recipient
-    ) internal returns (uint256 _OutputAmount) {
+    function _swapEthtoDai() internal returns (uint _OutputAmount) {
         // convert eth to weth to be traded as a normal ERC20 token
         IWETH(WETH9).deposit{value: msg.value}();
         // approve Uniswap router to spend this contract weth
         IWETH(WETH9).approve(address(SWAPROUTER), msg.value);
+        // setting up the params for the swap
         ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
             .ExactInputSingleParams({
                 tokenIn: WETH9,
                 tokenOut: DAI,
                 fee: 3000, // pool fee 0.3%
-                recipient: _recipient,
+                recipient: address(this),
                 deadline: block.timestamp + 300, // 5 minutes(300 seconds)
                 amountIn: msg.value,
                 amountOutMinimum: 0,
@@ -81,16 +147,14 @@ contract CrowdCharity {
 
     /// @notice Swaps a fixed amount of any token for a maximum possible amount of DAI through Uniswap V3
     /// @param _inputAmount The amount of the token that user need to donate with
-    /// @param _recipient The address that gets the equivilant DAI of msg.value
     /// @param _path abi encoded swap path of the token that requsted to be converted to DAI. Datatype is bytes
     /// @param _inputToken the token that user need to donate with
     /// @return _OutputAmount the equivilant DAI of msg.value
-    function _swapExactInputMultihop(
-        uint256 _inputAmount,
-        address _recipient,
+    function _swapTokentoDai(
+        uint _inputAmount,
         bytes memory _path,
         address _inputToken
-    ) internal returns (uint256 _OutputAmount) {
+    ) internal returns (uint _OutputAmount) {
         // transfer input Token to this contract
         require(
             IERC20(_inputToken).transferFrom(
@@ -109,7 +173,7 @@ contract CrowdCharity {
         ISwapRouter.ExactInputParams memory params = ISwapRouter
             .ExactInputParams({
                 path: _path,
-                recipient: _recipient,
+                recipient: address(this),
                 deadline: block.timestamp + 300, // 5 minutes(300 seconds)
                 amountIn: _inputAmount,
                 amountOutMinimum: 0
@@ -117,120 +181,189 @@ contract CrowdCharity {
         return SWAPROUTER.exactInput(params);
     }
 
-    /// @notice funding campaigns in the native currency
+    /// @notice funding campaigns in the native currency (ETH)
     /// @dev It converts Eth to Weth under the hood
     /// @param _campaignId defines the index of targeted campaign
-    function fundCampaignWithEth(uint256 _campaignId) external payable {
+    function fundInEth(
+        uint _campaignId
+    )
+        external
+        payable
+        fundingConstraints(_campaignId, msg.value)
+        campaignIdConstraints(_campaignId)
+    {
+        uint _fundedAmountInDai = _swapEthtoDai();
+        _finalizeFunding(_campaignId, _fundedAmountInDai);
+    }
+
+    /// @notice Funding campaigns with DAI token
+    /// @param _campaignId The index of the targeted campaign
+    /// @param _inputAmount The amount of DAI to be donated
+    function fundInDAI(
+        uint _campaignId,
+        uint _inputAmount
+    )
+        external
+        fundingConstraints(_campaignId, _inputAmount)
+        campaignIdConstraints(_campaignId)
+    {
         require(
-            campaigns[_campaignId].isOpen == true,
-            'Sadly the campaign is closed by its owner'
+            IERC20(DAI).transferFrom(msg.sender, address(this), _inputAmount),
+            'Your tokens transfer to campaign owner failed'
+        );
+        _finalizeFunding(_campaignId, _inputAmount);
+    }
+
+    /// @notice Funding campaigns with any token
+    /// @param _campaignId The index of the targeted campaign
+    /// @param _inputAmount The amount of the token to be donated
+    /// @param _path The ABI encoded swap path of the token to be converted to DAI
+    /// @param _inputToken The address of the token to be donated
+    function fundInToken(
+        uint _campaignId,
+        uint _inputAmount,
+        bytes memory _path,
+        address _inputToken
+    )
+        external
+        fundingConstraints(_campaignId, _inputAmount)
+        campaignIdConstraints(_campaignId)
+    {
+        require(
+            _inputToken != address(0) && _inputToken != DAI,
+            'Token address cannot be 0 and DAI cannot be used for this function'
+        );
+        uint _fundedAmountInDai = _swapTokentoDai(
+            _inputAmount,
+            _path,
+            _inputToken
+        );
+        _finalizeFunding(_campaignId, _fundedAmountInDai);
+    }
+
+    /** @notice Function to withdraw funds from a campaign.
+     * @param _campaignId defines the index of targeted campaign
+     */
+    function withdrawFunds(
+        uint _campaignId
+    ) public campaignIdConstraints(_campaignId) {
+        require(
+            campaigns[_campaignId].owner == msg.sender,
+            'Only owner can withdraw funds'
         );
         require(
-            campaigns[_campaignId].owner != msg.sender,
-            "Campaign owner can't fund the campaign"
+            campaigns[_campaignId].softcap <=
+                campaigns[_campaignId].raisedAmount,
+            "Softcap not reached yet, you can't withdraw"
         );
 
-        uint256 _fundedAmountInDai = _swapExactInputSingle(
-            campaigns[_campaignId].owner
+        uint _withdrawAmount = campaigns[_campaignId].raisedAmount -
+            campaigns[_campaignId].withdrawnAmount;
+        require(_withdrawAmount > 0, 'No funds to withdraw');
+        require(
+            IERC20(DAI).transferFrom(
+                address(this),
+                msg.sender,
+                _withdrawAmount
+            ),
+            'Withdraw failed'
         );
+        campaigns[_campaignId].withdrawnAmount += _withdrawAmount;
 
-        // funderAmount[_campaignId][msg.sender] += _fundedAmountInDai;
-        campaigns[_campaignId].raisedAmount += _fundedAmountInDai;
-        rewardContract.mint(msg.sender, 0, _fundedAmountInDai);
-
-        emit Funded(
+        emit Withdrawn(
             _campaignId,
-            _fundedAmountInDai,
-            block.timestamp,
-            msg.sender,
-            campaigns[_campaignId].owner
+            campaigns[_campaignId].owner,
+            _withdrawAmount,
+            block.timestamp
         );
     }
 
-    /// @notice funding campaigns in any token
-    /// @param _campaignId defines the index of targeted campaign
-    /// @param _inputToken the token that user need to donate with
-    /// @param _path abi encoded swap path of the token that requsted to be converted to DAI. Datatype is bytes
-    /// @param _inputToken the token that user need to donate with
-    function fundCampaignWithToken(
-        uint256 _campaignId,
-        uint256 _inputAmount,
-        bytes memory _path,
-        address _inputToken
-    ) external payable {
-        require(
-            campaigns[_campaignId].isOpen == true,
-            'Sadly the campaign is closed by its owner'
-        );
-        require(
-            campaigns[_campaignId].owner != msg.sender,
-            "Campaign owner can't fund the campaign"
-        );
-
-        uint256 _fundedAmountInDai;
-
-        if (_inputToken != DAI) {
-            _fundedAmountInDai = _swapExactInputMultihop(
-                _inputAmount,
-                campaigns[_campaignId].owner,
-                _path,
-                _inputToken
-            );
-        } else {
-            require(
-                IERC20(_inputToken).transferFrom(
-                    msg.sender,
-                    campaigns[_campaignId].owner,
-                    _inputAmount
-                ),
-                'Your tokens transfer to campaign owner failed'
-            );
-            _fundedAmountInDai = _inputAmount;
-        }
-
-        // funderAmount[_campaignId][msg.sender] += _fundedAmountInDai;
-        campaigns[_campaignId].raisedAmount += _fundedAmountInDai;
-        rewardContract.mint(msg.sender, 0, _fundedAmountInDai);
-
-        emit Funded(
-            _campaignId,
-            _fundedAmountInDai,
-            block.timestamp,
+    /** @notice Function to refund funds from a campaign.
+     * @param _campaignId defines the index of targeted campaign
+     */
+    function refund(
+        uint _campaignId
+    ) public campaignIdConstraints(_campaignId) {
+        uint _tokenBalance = rewardContract.balanceOf(
             msg.sender,
-            campaigns[_campaignId].owner
+            campaigns[_campaignId].rewardTokenId
         );
+        uint _refundAmount = fundersContributions[_campaignId][msg.sender];
+
+        require(
+            _tokenBalance >= _refundAmount,
+            "You don't have enough tokens to refunded"
+        );
+        require(_refundAmount > 0, "You don't have any funds to be refunded");
+        require(
+            campaigns[_campaignId].softcap >
+                campaigns[_campaignId].raisedAmount,
+            "Softcap reached, you can't refund"
+        );
+
+        require(
+            IERC20(DAI).transferFrom(address(this), msg.sender, _refundAmount),
+            'Refund failed'
+        );
+        fundersContributions[_campaignId][msg.sender] = 0;
+        campaigns[_campaignId].raisedAmount -= _refundAmount;
+
+        rewardContract.burn(
+            msg.sender,
+            campaigns[_campaignId].rewardTokenId,
+            _refundAmount
+        );
+        emit Refunded(_campaignId, msg.sender, block.timestamp, _refundAmount);
     }
 
     /** @notice Function to start a new campaign.
      * @param _target defines the goal amount need to be raised
      * @param _title defines the the title of the campaign
+     * @param _image defines the the image of the campaign
      */
     function createCampaign(
-        uint256 _target,
+        uint _target,
+        uint _softcap,
+        uint _rewardTokenId,
         string calldata _title,
         string calldata _image
     ) external {
+        require(_rewardTokenId > 0, 'Reward token id must be greater than 0');
         require(_target > 0, 'Target amount must be greater than 0');
-        require(bytes(_title).length != 0, "Title can't be empty");
-        require(bytes(_image).length != 0, "image can't be empty");
-
+        require(
+            _softcap > 0 && _softcap <= _target,
+            'Softcap must be greater than 0 and less than or equal target'
+        );
+        require(bytes(_title).length > 0, "Title can't be empty");
+        require(bytes(_image).length > 0, "image can't be empty");
+        for (uint i = 0; i < campaigns.length; i++) {
+            if (
+                campaigns[i].owner == msg.sender &&
+                campaigns[i].timeStamp + 7 days > block.timestamp
+            ) {
+                revert('You can start a new campaign every 7 days');
+            }
+        }
         campaigns.push(
             Campaign({
-                owner: payable(msg.sender),
+                owner: msg.sender,
                 target: _target,
+                softcap: _softcap,
                 raisedAmount: 0,
+                withdrawnAmount: 0,
+                rewardTokenId: _rewardTokenId,
                 timeStamp: block.timestamp,
                 isOpen: true,
                 title: _title,
                 image: _image
             })
         );
-
         emit Started(
-            campaigns[campaignsCount].owner, // owner
-            campaignsCount, // id
-            block.timestamp, // timestamp
-            campaigns[campaignsCount].target // target
+            campaigns[campaignsCount].owner,
+            campaignsCount,
+            _rewardTokenId,
+            block.timestamp,
+            campaigns[campaignsCount].target
         );
 
         campaignsCount++;
@@ -239,17 +372,19 @@ contract CrowdCharity {
     /** @notice Function to close a campaign.
      * @param _campaignId defines the index of targeted campaign
      */
-    function closeCampaign(uint256 _campaignId) external {
+    function closeCampaign(
+        uint _campaignId
+    ) external campaignIdConstraints(_campaignId) {
         require(
             campaigns[_campaignId].owner == msg.sender,
-            'Only owner can close his/her campaign'
+            'Only owner can close their campaign'
         );
         require(
             campaigns[_campaignId].isOpen == true,
             'campaign is already closed'
         );
-        campaigns[_campaignId].isOpen = false;
 
+        campaigns[_campaignId].isOpen = false;
         emit Closed(_campaignId, campaigns[_campaignId].owner, block.timestamp);
     }
 
@@ -257,14 +392,15 @@ contract CrowdCharity {
      * @param _campaignId defines the index of targeted campaign
      */
     function getCampaign(
-        uint256 _campaignId
+        uint _campaignId
     )
         public
         view
+        campaignIdConstraints(_campaignId)
         returns (
-            address payable owner,
-            uint256 target,
-            uint256 raisedAmount,
+            address owner,
+            uint target,
+            uint raisedAmount,
             bool isOpen,
             string memory image,
             string memory title
@@ -280,24 +416,30 @@ contract CrowdCharity {
         );
     }
 
-    /** @notice Function to get campaigns' details.
+    /**
+     * @notice Returns all campaigns in the campaigns array.
+     * @return Campaign[] An array of all campaigns.
      */
-    function getCampaigns() public view returns (Campaign[] memory) {
+    function getAllCampaigns() public view returns (Campaign[] memory) {
         return campaigns;
     }
 
     function getCampaignsByIds(
-        uint256[] memory campaignIds
+        uint[] memory campaignIds
     ) public view returns (Campaign[] memory) {
-
         Campaign[] memory matchingCampaigns = new Campaign[](
             campaignIds.length
         );
-        uint256 matchingCount = 0;
+        uint matchingCount = 0;
 
-        for (uint256 i = 0; i < campaignIds.length; i++) {
+        for (uint i = 0; i < campaignIds.length; i++) {
             if (campaignIds[i] < campaignsCount) {
-                require(campaignIds[i] >= 0, "input id must be greater than 0");
+                require(campaignIds[i] >= 0, 'input id must be greater than 0');
+                require(
+                    campaignIds[i] < campaignsCount,
+                    'input id must be less than campaignsCount'
+                );
+
                 matchingCampaigns[matchingCount] = campaigns[campaignIds[i]];
                 matchingCount++;
             }
@@ -307,7 +449,7 @@ contract CrowdCharity {
         Campaign[] memory result = new Campaign[](matchingCount);
 
         // Copy the matching campaigns into the new array
-        for (uint256 i = 0; i < matchingCount; i++) {
+        for (uint i = 0; i < matchingCount; i++) {
             result[i] = matchingCampaigns[i];
         }
 
@@ -319,12 +461,12 @@ contract CrowdCharity {
     receive() external payable {}
 
     fallback() external payable {
-        rewardContract.mint(msg.sender, 1, msg.value); // special reward only for our supports ;)
+        rewardContract.mint(msg.sender, 0, msg.value); // special reward only for our supports ;)
     }
 
     // Just for testing
 
-    function dummy() external view returns (uint256) {
+    function dummy() external view returns (uint) {
         return IERC20(DAI).balanceOf(msg.sender);
     }
 
@@ -373,3 +515,49 @@ contract CrowdCharity {
 //         campaigns[_campaignId].owner
 //     );
 // }
+
+/*
+    /// @notice funding campaigns in any token
+    /// @param _campaignId defines the index of targeted campaign
+    /// @param _inputToken the token that user need to donate with
+    /// @param _path abi encoded swap path of the token that requsted to be converted to DAI. Datatype is bytes
+    /// @param _inputToken the token that user need to donate with
+    function fundInToken(
+        uint _campaignId,
+        uint _inputAmount,
+        bytes memory _path,
+        address _inputToken
+    ) external payable {
+        require(
+            campaigns[_campaignId].isOpen == true,
+            'Sadly the campaign is closed by its owner'
+        );
+        require(
+            campaigns[_campaignId].owner != msg.sender,
+            "Campaign owner can't fund the campaign"
+        );
+
+        uint _fundedAmountInDai;
+
+        if (_inputToken != DAI) {
+            _fundedAmountInDai = _swapTokentoDai(
+                _inputAmount,
+                campaigns[_campaignId].owner,
+                _path,
+                _inputToken
+            );
+        } else {
+            require(
+                IERC20(_inputToken).transferFrom(
+                    msg.sender,
+                    campaigns[_campaignId].owner,
+                    _inputAmount
+                ),
+                'Your tokens transfer to campaign owner failed'
+            );
+            _fundedAmountInDai = _inputAmount;
+        }
+
+        _finalizeFunding(_campaignId, _fundedAmountInDai);
+    }
+*/
