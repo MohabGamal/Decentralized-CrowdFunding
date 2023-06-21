@@ -9,6 +9,17 @@ require('@openzeppelin/hardhat-upgrades')
 
 require('dotenv').config()
 
+let networks
+if (!process.env.CI)
+  networks = {
+    hardhat: {
+      chainId: 1337,
+      forking: {
+        url: process.env.ALCHEMY_API_URL
+      }
+    }
+  }
+
 module.exports = {
   solidity: {
     version: '0.8.1', //0.8.17
@@ -19,12 +30,5 @@ module.exports = {
       }
     }
   },
-  networks: {
-    hardhat: {
-      chainId: 1337,
-      forking: {
-        url: process.env.ALCHEMY_API_URL
-      }
-    }
-  }
+  networks
 }

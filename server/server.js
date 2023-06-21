@@ -85,7 +85,7 @@ server.use((error, req, res, next) => {
 
   // console.log(message)
   // const message = formatError(error.message)
-  const stack = NODE_ENV === 'development' && error.stack
+  const stack = NODE_ENV === 'development' && error?.stack
 
   return res.status(status).json({
     success: false,

@@ -21,11 +21,9 @@ export function mongooseConnect(mongoUri) {
     })
     .then(() => {
       logger.info('mongoDB connected')
-      process.env.CI && process.exit(0)
     })
     .catch((error) => {
       logger.error(error.message)
-      process.env.CI && process.exit(1)
     })
 
   mongoose.connection.on('disconnected', () => {

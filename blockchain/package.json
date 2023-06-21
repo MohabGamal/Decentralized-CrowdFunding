@@ -7,7 +7,7 @@
     "test": "npx hardhat test",
     "clean": "npx hardhat clean",
     "dev": "npx hardhat node",
-    "compile": "npx hardhat compile",
+    "compile": "npx hardhat compile --force",
     "deploy": "npx hardhat run scripts/deploy.js --network localhost",
     "deploy:CI": "npx hardhat run scripts/deploy.js",
     "deploy:mainnet": "npx hardhat run scripts/deploy.js --network mainnet",
@@ -28,6 +28,9 @@
     "dotenv": "^16.3.1",
     "ethereum-waffle": "^4.0.10",
     "ethers": "^5.7.1",
-    "solidity-coverage": "^0.7.22"
+    "solidity-coverage": "^0.7.22",
+    "glob": "^7.2.0"
+  },
+  "dependencies": {
   }
 }

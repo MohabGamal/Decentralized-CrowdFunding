@@ -9,9 +9,11 @@ import {
   MONGO_PRODUCTION_URI
 } from './constants.js'
 
+
 // Start server
 const app = server.listen(PORT, () => {
   logger.info('connected to 8080')
+  process.env.CI && process.exit(0)
 })
 
 if (NODE_ENV === 'development') {
@@ -19,6 +21,7 @@ if (NODE_ENV === 'development') {
 }
 
 if (NODE_ENV === 'production') {
+  console.log('connected')
   mongooseConnect(MONGO_PRODUCTION_URI)
   gracefulShutdown(app)
 }
