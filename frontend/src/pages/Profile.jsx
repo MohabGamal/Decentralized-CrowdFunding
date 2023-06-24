@@ -1,16 +1,13 @@
-import { useFetch } from '../hooks'
+import React from 'react'
 
+import { useFetch } from '../hooks'
 import { DisplayCampaigns, UserRewards } from '../components'
 import { useStateContext } from '../context'
 
 const Profile = () => {
   const { address } = useStateContext()
 
-  const {
-    data: campaigns,
-    loading: isCampaignsLoading,
-    error: campaignsError
-  } = useFetch(
+  const { data: campaigns, loading: isCampaignsLoading } = useFetch(
     `http://localhost:8080/api/v1/campaigns/profiles/${address}`,
     {},
     [address]

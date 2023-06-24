@@ -1,3 +1,6 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
 function FormField({
   labelName,
   placeholder,
@@ -9,7 +12,7 @@ function FormField({
 }) {
   const labelDetails = () => {
     if (isNotRequired)
-      // message field
+      // the message field
       return (
         <input
           value={value}
@@ -54,6 +57,16 @@ function FormField({
       {labelDetails()}
     </label>
   )
+}
+
+FormField.propTypes = {
+  labelName: PropTypes.string,
+  placeholder: PropTypes.string,
+  inputType: PropTypes.string.isRequired,
+  isTextArea: PropTypes.bool,
+  isNotRequired: PropTypes.bool,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  handleChange: PropTypes.func.isRequired
 }
 
 export default FormField

@@ -1,6 +1,5 @@
 import moment from 'moment'
 import Joi from 'joi'
-import { toast } from 'react-toastify'
 
 export const calculatePercentage = (full, partial) => {
   const percentage = Math.round((partial * 100) / full)
@@ -30,7 +29,7 @@ export function formatError(error) {
     const endIndex = errorMessage?.lastIndexOf('}') + 1
     const rpcErrorMessage = errorMessage?.substring(startIndex, endIndex)
     const errorObj = JSON?.parse(rpcErrorMessage)
-    const { message } = errorObj?.value.data
+    const message = errorObj?.value.data?.message
     errorMessage = message
   } else if (JoiError) {
     const messages = error.details.map((detail) => detail.message)

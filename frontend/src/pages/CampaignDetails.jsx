@@ -1,14 +1,8 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ethereum, loader, withdraw } from '../assets'
+import { ethereum, loader } from '../assets'
 import { useStateContext } from '../context'
-import {
-  CountBox,
-  CustomButton,
-  Loader,
-  MetMaskButton,
-  UserRewards
-} from '../components'
+import { CountBox, Loader, MetMaskButton, UserRewards } from '../components'
 import { useFetch } from '../hooks'
 import { JoiValidate, calculatePercentage, formatError } from '../utils'
 import { toast } from 'react-toastify'
@@ -17,19 +11,16 @@ import { campaignIdSchema, donationAmountSchema } from '../validators/campaigns'
 
 const CampaignDetails = () => {
   const { id } = useParams()
-  const { campaignContract, signer, address, connect } = useStateContext()
+  const { campaignContract, signer, address } = useStateContext()
 
   const [isLoading, setIsLoading] = useState(false)
   const [amount, setAmount] = useState('')
   // const [userDonation, setUserDonation] = useState('')
   const [editMode, setEditMode] = useState(false)
 
-  const {
-    data: campaign,
-    loading: iscampaignLoading,
-    error: campaignError,
-    reFetch
-  } = useFetch(`http://localhost:8080/api/v1/campaigns/${id}`)
+  const { data: campaign, reFetch } = useFetch(
+    `http://localhost:8080/api/v1/campaigns/${id}`
+  )
   // console.log(campaign)
 
   const userDonation = useFetch(

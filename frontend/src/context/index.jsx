@@ -1,4 +1,5 @@
-import { useContext, createContext, useState } from 'react'
+import React, { useContext, createContext, useState } from 'react'
+import PropTypes from 'prop-types' // import PropTypes
 import { CAMPAIGN_CONTRACT_ADDRESS, CAMPAIGN_CONTRACT_ABI } from '../constants'
 import { ethers } from 'ethers'
 import { toast } from 'react-toastify'
@@ -94,6 +95,10 @@ export const StateContextProvider = ({ children }) => {
       </StateContext.Provider>
     )
   }
+}
+
+StateContextProvider.propTypes = {
+  children: PropTypes.node.isRequired // add prop validation for children
 }
 
 export const useStateContext = () => useContext(StateContext)

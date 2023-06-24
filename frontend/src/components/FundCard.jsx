@@ -1,7 +1,9 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
 import { tagType, ethereum } from '../assets'
 import { formatDate } from '../utils'
-// #e4dfdf
-// #ffffff
+
 const FundCard = ({
   owner,
   title,
@@ -94,6 +96,19 @@ const FundCard = ({
       </div>
     </div>
   )
+}
+
+FundCard.propTypes = {
+  owner: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  target: PropTypes.string.isRequired,
+  category: PropTypes.string.isRequired,
+  timeStamp: PropTypes.number.isRequired,
+  status: PropTypes.string.isRequired,
+  amountCollected: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired
 }
 
 export default FundCard

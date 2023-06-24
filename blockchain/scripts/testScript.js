@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 const main = async () => {
   const crowdcharity = await ethers.getContractAt(
     'CrowdCharity',

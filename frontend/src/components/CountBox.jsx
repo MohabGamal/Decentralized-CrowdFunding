@@ -1,8 +1,9 @@
 import React from 'react'
 
+import PropTypes from 'prop-types'
+
 const CountBox = ({ title, value, styles }) => {
   const textStyle = styles?.text
-  const bgStyle = styles?.bg
 
   return (
     <div className="flex flex-col items-center w-[150px]">
@@ -21,6 +22,14 @@ const CountBox = ({ title, value, styles }) => {
       </p>
     </div>
   )
+}
+
+CountBox.propTypes = {
+  title: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+  styles: PropTypes.shape({
+    text: PropTypes.string
+  })
 }
 
 export default CountBox

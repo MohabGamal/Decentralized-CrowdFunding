@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 module.exports = encodePath = (path, fees) => {
   const FEE_SIZE = 3
   if (path.length != fees.length + 1) {

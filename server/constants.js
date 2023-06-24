@@ -1,14 +1,13 @@
+/* eslint-disable no-undef */
 import dotenv from 'dotenv'
 dotenv.config()
 
 export const MONGO_PRODUCTION_URI = process.env.MONGO_PRODUCTION_URI
 export const MONGO_DEVELOPMENT_URI = process.env.MONGO_DEVELOPMENT_URI
-export const MONGO_TEST_URI = process.env.MONGO_TEST_URI
 export const PORT = process.env.PORT
 export const NODE_ENV = process.env.NODE_ENV
 export const JSON_RPC_ETHEREUM_PROVIDER = process.env.JSON_RPC_ETHEREUM_PROVIDER
 export const WEB3_STORAGE_TOKEN = process.env.WEB3_STORAGE_TOKEN
-
 export const CAMPAIGN_CONTRACT_ADDRESS =
   '0xE2b5bDE7e80f89975f7229d78aD9259b2723d11F'
 export const REWARD_CONTRACT_ADDRESS =

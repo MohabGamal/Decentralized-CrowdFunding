@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { parseEther } from 'ethers/lib/utils'
@@ -8,7 +8,7 @@ import { useStateContext } from '../context'
 import { CustomButton, FormField, Loader, MetMaskButton } from '../components'
 import { JoiValidate, formatError } from './../utils'
 import { campaignIdSchema, campaignCreateSchema } from '../validators/campaigns'
-import { imagePlaceholder, metamask } from '../assets'
+import { imagePlaceholder } from '../assets'
 
 const CreateCampaign = () => {
   const navigate = useNavigate()
@@ -25,14 +25,14 @@ const CreateCampaign = () => {
     image: {}
   })
 
-  const { campaignContract, signer, address, connect } = useStateContext()
+  const { campaignContract, signer, address } = useStateContext()
 
   const handleFormFieldChange = (fieldName, e) => {
     const { value, files } = e.target
 
     if (fieldName === 'image') {
       if (files && files[0]?.type.startsWith('image/')) {
-        setForm({ ...form, ['image']: files })
+        setForm({ ...form, image: files })
         setChosenImage(URL.createObjectURL(files[0]))
       } else {
         toast.error('Only images are allowed!')
@@ -47,7 +47,7 @@ const CreateCampaign = () => {
     formData.append('file', image[0])
 
     const imageUrl = await axios.post(
-      `http://localhost:8080/api/v1/campaigns/uploadImage`,
+      'http://localhost:8080/api/v1/campaigns/uploadImage',
       formData,
       {
         headers: {
@@ -96,9 +96,8 @@ const CreateCampaign = () => {
         title,
         imageUrl
       )
-      if (campaignId == undefined) return
 
-      await axios.post(`http://localhost:8080/api/v1/campaigns/`, {
+      await axios.post('http://localhost:8080/api/v1/campaigns/', {
         campaignId,
         desc,
         category,

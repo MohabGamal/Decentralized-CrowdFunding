@@ -9,10 +9,10 @@ import {
   MONGO_PRODUCTION_URI
 } from './constants.js'
 
-
 // Start server
 const app = server.listen(PORT, () => {
   logger.info('connected to 8080')
+  // eslint-disable-next-line no-undef
   process.env.CI && process.exit(0)
 })
 

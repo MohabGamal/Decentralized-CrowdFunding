@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 /** @format */
 
 async function main() {
-  const [add1, add2] = await ethers.getSigners()
+  const [add1] = await ethers.getSigners()
   console.log(`Deploying contracts with the account: ${add1.address}`)
   // const balance = await add1.getBalance();
   // console.log(`Account balance: ${balance.toString()}`);

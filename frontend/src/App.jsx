@@ -1,9 +1,10 @@
+import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { Sidebar, Navbar } from './components'
-import { CampaignDetails, CreateCampaign, Home, Profile, Test } from './pages'
+import { CampaignDetails, CreateCampaign, Home, Profile } from './pages'
 
 const App = () => {
   if (localStorage.theme === 'dark') {
@@ -32,8 +33,6 @@ const App = () => {
             path="/campaign-details/:id/:slug"
             element={<CampaignDetails />}
           />
-
-          <Route path="/test" element={<Test />} />
         </Routes>
       </div>
     </div>

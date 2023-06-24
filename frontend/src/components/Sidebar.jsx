@@ -1,34 +1,34 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
+import { Link, useNavigate } from 'react-router-dom'
 import { logo, moon, sun } from '../assets'
 import { navlinks } from '../constants'
 import { useStateContext } from '../context'
 
-// #e4dfdf
+const Icon = ({ styles, name, imgUrl, isActive, handleClick }) => (
+  <div
+    className={`w-[48px] h-[48px] rounded-[10px] ${
+      isActive && isActive === name && 'bg-green-200 dark:bg-[#2c2f32]' // #ffffff
+    } flex justify-center items-center cursor-pointer hover:scale-110 ${styles}`}
+    onClick={handleClick}
+  >
+    {!isActive ? (
+      <img src={imgUrl} alt="fund_logo" className="w-1/2 h-1/2" />
+    ) : (
+      <img
+        src={imgUrl}
+        alt="fund_logo"
+        className={`w-1/2 h-1/2 ${isActive !== name && 'grayscale'}`}
+      />
+    )}
+  </div>
+)
+
 const Sidebar = () => {
   const navigate = useNavigate()
   const { toggleDarkMode } = useStateContext()
   const [isActive, setIsActive] = useState('dashboard')
-
-  const Icon = ({ styles, name, imgUrl, isActive, handleClick }) => (
-    <div
-      className={`w-[48px] h-[48px] rounded-[10px] ${
-        isActive && isActive === name && 'bg-green-200 dark:bg-[#2c2f32]' // #ffffff
-      } flex justify-center items-center cursor-pointer hover:scale-110 ${styles}`}
-      onClick={handleClick}
-    >
-      {!isActive ? (
-        <img src={imgUrl} alt="fund_logo" className="w-1/2 h-1/2" />
-      ) : (
-        <img
-          src={imgUrl}
-          alt="fund_logo"
-          className={`w-1/2 h-1/2 ${isActive !== name && 'grayscale'}`}
-        />
-      )}
-    </div>
-  )
 
   return (
     <div className="flex justify-between flex-col sticky h-[93vh] top-3">
@@ -61,6 +61,14 @@ const Sidebar = () => {
       </div>
     </div>
   )
+}
+
+Icon.propTypes = {
+  styles: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  imgUrl: PropTypes.string.isRequired,
+  isActive: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired
 }
 
 export default Sidebar

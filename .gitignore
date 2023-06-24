@@ -6,6 +6,6 @@ blockchain/cache
 node_modules
 .env
 coverage
-frontend/public
+frontend/dist
 logs.log
 logs

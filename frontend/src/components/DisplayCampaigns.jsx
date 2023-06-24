@@ -1,3 +1,5 @@
+import React from 'react'
+import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 
 import FundCard from './FundCard'
@@ -44,6 +46,13 @@ const DisplayCampaigns = ({ title, isLoading, campaigns, campaignsCount }) => {
       </div>
     </div>
   )
+}
+
+DisplayCampaigns.propTypes = {
+  title: PropTypes.string.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  campaigns: PropTypes.array.isRequired,
+  campaignsCount: PropTypes.number.isRequired
 }
 
 export default DisplayCampaigns

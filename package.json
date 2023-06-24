@@ -10,10 +10,10 @@
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix blockchain\" \"npm run dev --prefix server\" \"npm run dev --prefix frontend\"",
-    "install:dev:server": "npm install --prefix server",
-    "install:prod:server": "npm install --production --prefix server",
-    "install:frontend": "npm install --prefix frontend",
-    "install:blockchain": "npm install --prefix blockchain",
+    "install:dev:server": "npm ci --prefix server",
+    "install:prod:server": "npm ci --omit=dev --prefix server",
+    "install:frontend": "npm ci --prefix frontend",
+    "install:blockchain": "npm ci --prefix blockchain",
     "dev:server": "npm run dev --prefix server",
     "dev:frontend": "npm run dev --prefix frontend",
     "test:server": "npm run test --prefix server",
@@ -32,6 +32,14 @@
   },
   "homepage": "https://github.com/MohabGamal/Decentralized-CrowdFunding#readme",
   "devDependencies": {
-    "concurrently": "^8.0.1"
+    "concurrently": "^8.0.1",
+    "eslint": "^8.43.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.2"
   }
 }

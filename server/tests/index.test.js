@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { jest } from '@jest/globals'
 import request from 'supertest'
 import { web3Client } from '../config/web3.config.js'

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import request from 'supertest'
 import mongoose from 'mongoose'
 import { MongoMemoryServer } from 'mongodb-memory-server'
@@ -96,15 +97,15 @@ describe('add campaign', () => {
   // `campaignId` failure
   it('should fail to add campaign if campaignId is invalid', async () => {
     const campaignIds = [11, 5.5, -1, '', undefined, null]
-    for (let campaignId of campaignIds) {
+    for (const campaignId of campaignIds) {
       const res = await request(server).post('/api/v1/campaigns/').send({
-        campaignId: campaignId,
+        campaignId,
         desc: 'test',
         category: 'test cat'
       })
       if (campaignId === 11) {
         const res2 = await request(server).post('/api/v1/campaigns/').send({
-          campaignId: campaignId,
+          campaignId,
           desc: 'test',
           category: 'test cat'
         })
@@ -132,7 +133,7 @@ describe('add campaign', () => {
   // `desc` failure
   it('should fail to add campaign if desc is invalid', async () => {
     const descs = [1, '', undefined, null]
-    for (let desc of descs) {
+    for (const desc of descs) {
       const res = await request(server).post('/api/v1/campaigns/').send({
         campaignId: 1,
         desc: descs,
@@ -148,11 +149,11 @@ describe('add campaign', () => {
   // `category` failure
   it('should fail to add campaign if category is invalid', async () => {
     const categories = [1, '', undefined, null]
-    for (let category of categories) {
+    for (const category of categories) {
       const res = await request(server).post('/api/v1/campaigns/').send({
         campaignId: 1,
         desc: 'test',
-        category: category
+        category
       })
       if (category === 1 || category === null) {
         expect(res.statusCode).toEqual(400)
@@ -172,12 +173,12 @@ describe('add campaign', () => {
   // `featured` failure and success
   it('should fail to add campaign if featured is invalid and succeed if undefined', async () => {
     const featuredVals = [5, 'string', null, undefined]
-    for (let featured of featuredVals) {
+    for (const featured of featuredVals) {
       const res = await request(server).post('/api/v1/campaigns/').send({
         campaignId: 100,
         desc: 'test',
         category: 'test cat',
-        featured: featured
+        featured
       })
       if (featured === 5 || featured === 'string' || featured === null) {
         expect(res.statusCode).toEqual(400)
@@ -191,12 +192,12 @@ describe('add campaign', () => {
   // `message` failure and success
   it('should fail to add campaign if message is invalid and succeed if undefined', async () => {
     const messages = [1, '', null, undefined]
-    for (let message of messages) {
+    for (const message of messages) {
       const res = await request(server).post('/api/v1/campaigns/').send({
         campaignId: 3,
         desc: 'test',
         category: 'test cat',
-        message: message
+        message
       })
       if (message === 1 || message === null) {
         expect(res.statusCode).toEqual(400)
@@ -256,7 +257,7 @@ describe('update campaign', () => {
   it('should fail to update campaign if campaignId or _id was inputted', async () => {
     const immutableFields = ['campaignId', '_id']
 
-    for (let field of immutableFields) {
+    for (const field of immutableFields) {
       const res = await request(server)
         .patch(`/api/v1/campaigns/${id}`)
         .send({
@@ -269,16 +270,16 @@ describe('update campaign', () => {
   // `desc`, `category`, `message`, `featured` failure
   it('should fail to update campaign if desc, category, message, or feature are invalid', async () => {
     const fields = ['desc', 'category', 'message', 'featured']
-    for (let field of fields) {
+    for (const field of fields) {
       const res = await request(server)
         .patch(`/api/v1/campaigns/${id}`)
         .send({
           [field]: 100
         })
       expect(res.statusCode).toEqual(400)
-      if (field === 'featured')
+      if (field === 'featured') {
         expect(res.body.message).toEqual([`"${field}" must be a boolean`])
-      else expect(res.body.message).toEqual([`"${field}" must be a string`])
+      } else expect(res.body.message).toEqual([`"${field}" must be a string`])
     }
   })
 })
@@ -294,7 +295,7 @@ describe('delete campaign', () => {
   // delete failure
   it('should fail to delete campaign if id is invalid', async () => {
     const ids = [1, 'invalid', null, undefined]
-    for (let id of ids) {
+    for (const id of ids) {
       const res = await request(server).delete(`/api/v1/campaigns/${id}`)
       expect(res.statusCode).toEqual(400)
       expect(res.body.message).toEqual([
@@ -505,18 +506,19 @@ describe('get campaign by id', () => {
       const res = await request(server).get(`/api/v1/campaigns/${campaignId}`)
       expect(res.statusCode).toEqual(400)
 
-      if (campaignId === 1.1)
+      if (campaignId === 1.1) {
         expect(res.body.message).toEqual(['"campaignId" must be an integer'])
-      else if (campaignId === -1)
+      } else if (campaignId === -1) {
         expect(res.body.message).toEqual([
           '"campaignId" must be greater than or equal to 0'
         ])
-      else if (
+      } else if (
         campaignId === 'invalid' ||
         campaignId === null ||
         campaignId === undefined
-      )
+      ) {
         expect(res.body.message).toEqual(['"campaignId" must be a number'])
+      }
     }
   })
 })

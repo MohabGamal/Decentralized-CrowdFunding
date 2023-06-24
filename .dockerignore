@@ -6,4 +6,4 @@ blockchain
 coverage
 logs
 logs.log
-frontend/public
+frontend/dist

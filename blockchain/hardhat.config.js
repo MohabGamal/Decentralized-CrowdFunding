@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * @format
  * @type import('hardhat/config').HardhatUserConfig
