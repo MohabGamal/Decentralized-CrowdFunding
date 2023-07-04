@@ -6,11 +6,11 @@ import { logo, moon, sun } from '../assets'
 import { navlinks } from '../constants'
 import { useStateContext } from '../context'
 
-const Icon = ({ styles, name, imgUrl, isActive, handleClick }) => (
+const Icon = ({ name, imgUrl, isActive, handleClick }) => (
   <div
-    className={`w-[48px] h-[48px] rounded-[10px] ${
-      isActive && isActive === name && 'bg-green-200 dark:bg-[#2c2f32]' // #ffffff
-    } flex justify-center items-center cursor-pointer hover:scale-110 ${styles}`}
+    className={`w-[55px] h-[55px] rounded-[10px] hover:bg-green-200 dark:hover:bg-[#2c2f32] ${
+      isActive && isActive === name && 'bg-green-200 dark:bg-[#2c2f32]'
+    } flex justify-center items-center cursor-pointer transition-all duration-300`}
     onClick={handleClick}
   >
     {!isActive ? (
@@ -27,7 +27,7 @@ const Icon = ({ styles, name, imgUrl, isActive, handleClick }) => (
 
 const Sidebar = () => {
   const navigate = useNavigate()
-  const { toggleDarkMode } = useStateContext()
+  const { toggleDarkMode, theme } = useStateContext()
   const [isActive, setIsActive] = useState('dashboard')
 
   return (
@@ -53,21 +53,30 @@ const Sidebar = () => {
             />
           ))}
         </div>
-        <Icon
-          styles=" bg-light bg-slate-900  dark:bg-gray-800 transition-all duration-300"
-          imgUrl={localStorage.theme === 'dark' ? sun : moon}
+        {/* <Icon
+          styles="bg-light bg-slate-900 dark:bg-gray-800 hover:scale-110 transition-all duration-300"
+          imgUrl={theme === 'dark' ? sun : moon}
           handleClick={toggleDarkMode}
-        />
+        /> */}
+        <div
+          className="w-[55px] h-[55px] rounded-[10px]
+          flex justify-center items-center cursor-pointer bg-slate-900 dark:bg-gray-600 hover:scale-110 transition-all duration-300"
+          onClick={toggleDarkMode}
+        >
+          <img
+            src={theme === 'dark' ? sun : moon}
+            className="w-[43%] h-[43%]"
+          />
+        </div>
       </div>
     </div>
   )
 }
 
 Icon.propTypes = {
-  styles: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   imgUrl: PropTypes.string.isRequired,
-  isActive: PropTypes.string.isRequired,
+  isActive: PropTypes.string,
   handleClick: PropTypes.func.isRequired
 }
 

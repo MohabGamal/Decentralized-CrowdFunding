@@ -47,7 +47,7 @@ export const StateContextProvider = ({ children }) => {
     signer
       ?.getAddress()
       .then((result) => setAddress(result))
-      .catch(console.error)
+      .catch(console.log)
 
     window.ethereum.on('accountsChanged', (accounts) => {
       setAddress(accounts[0])
@@ -65,6 +65,7 @@ export const StateContextProvider = ({ children }) => {
           signer,
           address,
           campaignContract,
+          theme,
           searchQuery,
           page,
           setPage,
@@ -83,6 +84,7 @@ export const StateContextProvider = ({ children }) => {
           signer: null,
           address: null,
           campaignContract: null,
+          theme,
           searchQuery,
           page,
           setPage,

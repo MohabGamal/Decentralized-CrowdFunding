@@ -16,7 +16,6 @@ contract CrowdCharity {
         ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     address public constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
-    uint public campaignsCount = 0;
 
     struct Campaign {
         address owner;
@@ -33,6 +32,7 @@ contract CrowdCharity {
     //campaignID => (Funder => amount)
     mapping(uint => mapping(address => uint)) public fundersContributions;
     Campaign[] public campaigns;
+    uint public campaignsCount;
 
     event Started(
         address indexed campaignOwner,
@@ -343,8 +343,8 @@ contract CrowdCharity {
             'Softcap must be at least 30% of the target'
         );
         require(bytes(_title).length > 0, "Title can't be empty");
-        require(bytes(_image).length > 0, "image can't be empty");
-        for (uint i = 0; i < campaigns.length; i++) {
+        require(bytes(_image).length > 0, "Image can't be empty");
+        for (uint i; i < campaignsCount; ++i) {
             require(
                 !(campaigns[i].owner == msg.sender &&
                     campaigns[i].timeStamp + 7 days > block.timestamp),
@@ -372,8 +372,7 @@ contract CrowdCharity {
             block.timestamp,
             campaigns[campaignsCount].target
         );
-
-        campaignsCount++;
+        ++campaignsCount;
     }
 
     /** @notice Function to close a campaign.
@@ -411,12 +410,15 @@ contract CrowdCharity {
     function getCampaignsByIds(
         uint[] memory campaignIds
     ) public view returns (Campaign[] memory) {
-        Campaign[] memory matchingCampaigns = new Campaign[](
-            campaignIds.length
-        );
-        uint matchingCount = 0;
 
-        for (uint i = 0; i < campaignIds.length; i++) {
+        uint matchingCount;
+        uint campaignsIdsCount = campaignIds.length;
+
+        Campaign[] memory matchingCampaigns = new Campaign[](
+            campaignsIdsCount
+        );
+
+        for (uint i; i < campaignsIdsCount; ++i) {
             if (campaignIds[i] < campaignsCount) {
                 require(campaignIds[i] >= 0, 'input id must be greater than 0');
                 require(
@@ -431,7 +433,7 @@ contract CrowdCharity {
         // Create a new array with the correct length
         Campaign[] memory result = new Campaign[](matchingCount);
         // Copy the matching campaigns into the new array
-        for (uint i = 0; i < matchingCount; i++) {
+        for (uint i; i < matchingCount; ++i) {
             result[i] = matchingCampaigns[i];
         }
         return result;

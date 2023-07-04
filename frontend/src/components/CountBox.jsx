@@ -26,7 +26,7 @@ const CountBox = ({ title, value, styles }) => {
 
 CountBox.propTypes = {
   title: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.string,
   styles: PropTypes.shape({
     text: PropTypes.string
   })

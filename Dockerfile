@@ -36,5 +36,5 @@ USER node
 # Start the server
 CMD ["npm", "run", "start:server"]
 
-# Expose port 8080
-EXPOSE 8080
+# Expose port 8000
+EXPOSE 8000

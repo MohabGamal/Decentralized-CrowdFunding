@@ -19,7 +19,7 @@ router.post('/', asyncHandler(addCampaign))
 router.get('/donations/:campaignId/:address', asyncHandler(getUserDonation))
 router.get('/:campaignId', asyncHandler(getCampaignById))
 router.get('/profiles/:address', asyncHandler(getUserCampaigns))
-router.patch('/:id', asyncHandler(updateCampaign))
+router.patch('/:campaignId', asyncHandler(updateCampaign))
 router.delete('/:id', asyncHandler(deleteCampaign))
 router.post('/uploadImage', upload.single('file'), asyncHandler(uploadImage))
 

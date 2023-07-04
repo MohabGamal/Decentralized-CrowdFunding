@@ -1,15 +1,15 @@
-import { createCampaign, dashboard, profile } from './assets'
+import { profile, cards, announce } from './assets'
 
 export const navlinks = [
   {
     name: 'dashboard',
-    imgUrl: dashboard,
+    imgUrl: cards,
     link: '/',
     pageUrl: 'http://localhost:5173/'
   },
   {
     name: 'Create Campaign',
-    imgUrl: createCampaign,
+    imgUrl: announce,
     link: '/create-campaign',
     pageUrl: 'http://localhost:5173/create-campaign'
   },

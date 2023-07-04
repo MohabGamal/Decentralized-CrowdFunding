@@ -5,11 +5,11 @@ import PropTypes from 'prop-types'
 
 function UserRewards({ address }) {
   const { data: rewardTokens } = useFetch(
-    'http://localhost:8080/api/v1/rewards/'
+    'http://localhost:8000/api/v1/rewards/'
   )
 
   const { data: userRewardsBalances } = useFetch(
-    `http://localhost:8080/api/v1/rewards/profiles/${address}/`,
+    `http://localhost:8000/api/v1/rewards/profiles/${address}/`,
     {},
     [address]
   )
@@ -35,7 +35,7 @@ function UserRewards({ address }) {
 }
 
 UserRewards.propTypes = {
-  address: PropTypes.string.isRequired
+  address: PropTypes.string
 }
 
 export default UserRewards

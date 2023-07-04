@@ -72,7 +72,7 @@ const FundCard = ({
             </p>
             <h4
               className={`font-epilogue font-semibold text-[15px] leading-[22px] ${
-                status === 'Open' ? 'text-[#1dc071]' : 'text-[#c70039]'
+                status === 'Open' ? 'text-primary' : 'text-[#c70039]'
               } `}
             >
               {status}
@@ -102,11 +102,11 @@ FundCard.propTypes = {
   owner: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-  target: PropTypes.string.isRequired,
+  target: PropTypes.number.isRequired,
   category: PropTypes.string.isRequired,
   timeStamp: PropTypes.number.isRequired,
   status: PropTypes.string.isRequired,
-  amountCollected: PropTypes.string.isRequired,
+  amountCollected: PropTypes.number.isRequired,
   image: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired
 }

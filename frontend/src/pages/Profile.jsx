@@ -8,7 +8,7 @@ const Profile = () => {
   const { address } = useStateContext()
 
   const { data: campaigns, loading: isCampaignsLoading } = useFetch(
-    `http://localhost:8080/api/v1/campaigns/profiles/${address}`,
+    `http://localhost:8000/api/v1/campaigns/profiles/${address}`,
     {},
     [address]
   )

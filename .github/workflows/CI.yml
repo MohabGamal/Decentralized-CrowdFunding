@@ -46,4 +46,4 @@ jobs:
         run: docker build . -t my-app:latest
 
       - name: Run Docker container
-        run: docker run -d --name my-container -p 8080:8080 my-app:latest
+        run: docker run -d --name my-container -p 8000:8000 my-app:latest

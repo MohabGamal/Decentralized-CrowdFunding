@@ -51,8 +51,8 @@ const DisplayCampaigns = ({ title, isLoading, campaigns, campaignsCount }) => {
 DisplayCampaigns.propTypes = {
   title: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  campaigns: PropTypes.array.isRequired,
-  campaignsCount: PropTypes.number.isRequired
+  campaigns: PropTypes.array,
+  campaignsCount: PropTypes.number
 }
 
 export default DisplayCampaigns

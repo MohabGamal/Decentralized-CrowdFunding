@@ -11,7 +11,7 @@ import {
 
 // Start server
 const app = server.listen(PORT, () => {
-  logger.info('connected to 8080')
+  logger.info(`connected to ${PORT} in ${NODE_ENV} mode`)
   // eslint-disable-next-line no-undef
   process.env.CI && process.exit(0)
 })

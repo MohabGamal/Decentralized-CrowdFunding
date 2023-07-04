@@ -10,7 +10,7 @@ const Home = () => {
   const [limit, setLimit] = useState(1)
   const [paginatedCampaigns, setPaginatedCampaigns] = useState([])
 
-  const url = new URL('http://localhost:8080/api/v1/campaigns')
+  const url = new URL('http://localhost:8000/api/v1/campaigns')
   url.searchParams.append('q', searchQuery)
 
   const { data: campaigns, loading: isCampaignsLoading } = useFetch(

@@ -47,7 +47,7 @@ const CreateCampaign = () => {
     formData.append('file', image[0])
 
     const imageUrl = await axios.post(
-      'http://localhost:8080/api/v1/campaigns/uploadImage',
+      'http://localhost:8000/api/v1/campaigns/uploadImage',
       formData,
       {
         headers: {
@@ -97,7 +97,7 @@ const CreateCampaign = () => {
         imageUrl
       )
 
-      await axios.post('http://localhost:8080/api/v1/campaigns/', {
+      await axios.post('http://localhost:8000/api/v1/campaigns/', {
         campaignId,
         desc,
         category,
@@ -152,7 +152,7 @@ const CreateCampaign = () => {
           />
           <FormField
             labelName="Softcap *"
-            placeholder="50$"
+            placeholder="Must be > 30% of goal!"
             inputType="number"
             value={form.softcap}
             handleChange={(e) => handleFormFieldChange('softcap', e)}
@@ -160,8 +160,9 @@ const CreateCampaign = () => {
         </div>
         <FormField
           labelName="Story *"
-          placeholder="Write your story"
+          placeholder="Write your story..."
           isTextArea
+          inputType="text"
           value={form.desc}
           handleChange={(e) => handleFormFieldChange('desc', e)}
         />
@@ -213,7 +214,7 @@ const CreateCampaign = () => {
             <CustomButton
               btnType="submit"
               title="Submit new campaign"
-              styles="bg-[#1dc071]"
+              styles="bg-primary"
               handleClick={handleSubmit}
             />
           ) : (

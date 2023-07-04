@@ -31,13 +31,7 @@ if (NODE_ENV === 'production') {
   logger = winston.createLogger({
     level: 'info', // info and above types like warn, error, etc. will be logged
     format: combine(winston.format.colorize(), devLogFormat),
-    transports: [
-      new winston.transports.Console({}),
-      new winston.transports.File({
-        filename: 'logs.log',
-        level: 'warn'
-      })
-    ]
+    transports: [new winston.transports.Console({})]
   })
 }
 
