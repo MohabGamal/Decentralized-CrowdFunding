@@ -7,6 +7,7 @@
 require('@nomiclabs/hardhat-waffle')
 require('solidity-coverage')
 require('@openzeppelin/hardhat-upgrades')
+require('hardhat-gas-reporter')
 
 require('dotenv').config()
 
@@ -22,6 +23,14 @@ if (!process.env.CI)
   }
 
 module.exports = {
+  gasReporter: {
+    enabled: true,
+    currency: 'USD',
+    gasPrice: 48,
+    showTimeSpent: true
+    // outputFile: 'gas-report.txt',
+    // noColors: true
+  },
   solidity: {
     version: '0.8.1', //0.8.17
     settings: {

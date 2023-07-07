@@ -9,7 +9,7 @@ import sun from './sun.svg'
 import moon from './moon.svg'
 import withdraw from './withdraw.svg'
 import tagType from './type.svg'
-// import search from './search.svg'
+import search from './search.svg'
 import menu from './menu.svg'
 import money from './money.svg'
 import loader from './loader.svg'
@@ -20,7 +20,7 @@ import metamask from './metamask.svg'
 import cards from './cards.svg'
 import announce from './announce.svg'
 import profile from './money-profile.svg'
-import search from './money-search.svg'
+// import search from './money-search.svg'
 
 const closeSvg = () => {
   return (

@@ -17,7 +17,7 @@ const CreateCampaign = () => {
 
   const [form, setForm] = useState({
     title: '',
-    category: '',
+    category: 'ds',
     desc: '',
     message: '',
     target: '',
@@ -118,7 +118,7 @@ const CreateCampaign = () => {
       {isLoading && <Loader />}
       <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#717171] rounded-[10px]">
         <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">
-          Start a Campaign
+          Launch New Campaign
         </h1>
       </div>
 
@@ -134,30 +134,30 @@ const CreateCampaign = () => {
             value={form.title}
             handleChange={(e) => handleFormFieldChange('title', e)}
           />
-          <FormField
+          {/* <FormField
             labelName="Campaign Category *"
             placeholder="Write one"
             inputType="text"
             value={form.category}
             handleChange={(e) => handleFormFieldChange('category', e)}
-          />
+          /> */}
         </div>
-        <div className="flex flex-wrap gap-[40px]">
-          <FormField
-            labelName="Goal *"
-            placeholder="100$"
-            inputType="number"
-            value={form.target}
-            handleChange={(e) => handleFormFieldChange('target', e)}
-          />
-          <FormField
-            labelName="Softcap *"
-            placeholder="Must be > 30% of goal!"
-            inputType="number"
-            value={form.softcap}
-            handleChange={(e) => handleFormFieldChange('softcap', e)}
-          />
-        </div>
+
+        <FormField
+          labelName="Goal *"
+          placeholder="10000$"
+          inputType="number"
+          value={form.target}
+          handleChange={(e) => handleFormFieldChange('target', e)}
+        />
+        <FormField
+          labelName="Softcap *"
+          placeholder="Minimum amount of funds to be able to withdraw  ( softcap > 30% of the goal!)"
+          inputType="number"
+          value={form.softcap}
+          handleChange={(e) => handleFormFieldChange('softcap', e)}
+        />
+
         <FormField
           labelName="Story *"
           placeholder="Write your story..."
@@ -203,7 +203,8 @@ const CreateCampaign = () => {
                 type="file"
                 accept="image/*"
                 onChange={(e) => handleFormFieldChange('image', e)}
-                className="block w-full text-sm text-slate-700 dark:text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#3d8663] file:text-white hover:file:bg-green-700"
+                className="block w-full text-sm text-slate-700 dark:text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white
+                 hover:file:bg-green-600"
               />
             </div>
           </div>

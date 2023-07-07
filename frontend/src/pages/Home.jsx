@@ -7,7 +7,7 @@ import Pagination from './../components/Pagination'
 const Home = () => {
   const { searchQuery, page } = useStateContext()
   // eslint-disable-next-line no-unused-vars
-  const [limit, setLimit] = useState(1)
+  const [limit, setLimit] = useState(3)
   const [paginatedCampaigns, setPaginatedCampaigns] = useState([])
 
   const url = new URL('http://localhost:8000/api/v1/campaigns')

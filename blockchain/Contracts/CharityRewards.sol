@@ -6,7 +6,7 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 
 contract CharityRewards is ERC1155, Ownable {
     address public deployer;
-    uint public tokensCount = 0;
+    uint public tokensCount;
     Token[] public tokens;
 
     struct Token {
@@ -54,7 +54,7 @@ contract CharityRewards is ERC1155, Ownable {
      * @param _tokensIds subtokens ids
      */
     modifier tokensIdsConstraints(uint[] memory _tokensIds) {
-        for (uint i = 0; i < _tokensIds.length; i++) {
+        for (uint i; i < tokensCount; ++i) {
             require(_tokensIds[i] > 0, "token ID can't be less than zero");
             require(
                 _tokensIds[i] < tokensCount,
@@ -167,7 +167,7 @@ contract CharityRewards is ERC1155, Ownable {
 
     function getTokensBalances(address _tokensHolder) public view returns (uint[] memory) {
         uint[] memory balances = new uint[](tokensCount);
-        for (uint i = 0; i < tokensCount; i++) {
+        for (uint i; i < tokensCount; ++i) {
             balances[i] = balanceOf(_tokensHolder, i);
         }
         return balances;

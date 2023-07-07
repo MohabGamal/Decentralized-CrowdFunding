@@ -13,7 +13,7 @@ const DisplayCampaigns = ({ title, isLoading, campaigns, campaignsCount }) => {
       <h2 className="font-epilogue font-semibold text-[20px] dark:text-white text-left">
         {title} ({campaignsCount})
       </h2>
-      <div className="flex flex-wrap mt-[20px] gap-[26px]">
+      <div className="flex flex-col flex-wrap mt-[20px] gap-[50px]">
         {isLoading && (
           <img
             src={loader}
