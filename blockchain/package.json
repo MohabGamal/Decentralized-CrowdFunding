@@ -7,12 +7,20 @@
     "test": "npx hardhat test",
     "clean": "npx hardhat clean",
     "dev": "npx hardhat node",
+<<<<<<< HEAD
+    "compile": "npx hardhat compile",
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost",
+    "deploy:CI": "npx hardhat run scripts/deploy.js",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.js --network mainnet",
+    "testScript": "npx hardhat run scripts/testScript.js --network localhost",
+=======
     "compile": "npx hardhat compile --force",
     "deploy": "npx hardhat run scripts/deploy.js --network localhost",
     "deploy:CI": "npx hardhat run scripts/deploy.js",
     "deploy:mainnet": "npx hardhat run scripts/deploy.js --network mainnet",
     "deploy:sepolia": "npx hardhat run scripts/deploy.js ",
     "testScript": "npx hardhat run scripts/testScript.js",
+>>>>>>> release
     "swapTry": "npx hardhat run scripts/swapTry.js --network localhost"
   },
   "keywords": [],
@@ -29,10 +37,14 @@
     "dotenv": "^16.3.1",
     "ethereum-waffle": "^4.0.10",
     "ethers": "^5.7.1",
+<<<<<<< HEAD
+    "solidity-coverage": "^0.7.22"
+=======
     "glob": "^7.2.0",
     "solidity-coverage": "^0.7.22",
     "hardhat-gas-reporter": "^1.0.9"
   },
   "dependencies": {
+>>>>>>> release
   }
 }

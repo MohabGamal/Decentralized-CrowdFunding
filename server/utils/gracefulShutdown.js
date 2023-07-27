@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 /* eslint-disable no-undef */
+>>>>>>> release
 import { mongooseDisconnect } from '../config/index.config.js'
 import logger from '../config/logger.config.js'
 

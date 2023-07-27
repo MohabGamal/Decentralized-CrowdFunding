@@ -1,5 +1,9 @@
+<<<<<<< HEAD
+import { useContext, createContext, useState } from 'react'
+=======
 import React, { useContext, createContext, useState } from 'react'
 import PropTypes from 'prop-types' // import PropTypes
+>>>>>>> release
 import { CAMPAIGN_CONTRACT_ADDRESS, CAMPAIGN_CONTRACT_ABI } from '../constants'
 import { ethers } from 'ethers'
 import { toast } from 'react-toastify'
@@ -47,7 +51,11 @@ export const StateContextProvider = ({ children }) => {
     signer
       ?.getAddress()
       .then((result) => setAddress(result))
+<<<<<<< HEAD
+      .catch(console.error)
+=======
       .catch(console.log)
+>>>>>>> release
 
     window.ethereum.on('accountsChanged', (accounts) => {
       setAddress(accounts[0])
@@ -65,7 +73,10 @@ export const StateContextProvider = ({ children }) => {
           signer,
           address,
           campaignContract,
+<<<<<<< HEAD
+=======
           theme,
+>>>>>>> release
           searchQuery,
           page,
           setPage,
@@ -84,7 +95,10 @@ export const StateContextProvider = ({ children }) => {
           signer: null,
           address: null,
           campaignContract: null,
+<<<<<<< HEAD
+=======
           theme,
+>>>>>>> release
           searchQuery,
           page,
           setPage,
@@ -99,8 +113,11 @@ export const StateContextProvider = ({ children }) => {
   }
 }
 
+<<<<<<< HEAD
+=======
 StateContextProvider.propTypes = {
   children: PropTypes.node.isRequired // add prop validation for children
 }
 
+>>>>>>> release
 export const useStateContext = () => useContext(StateContext)

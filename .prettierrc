@@ -3,6 +3,10 @@
   "quoteProps": "consistent",
   "arrowParens": "always",
   "semi": false,
+<<<<<<< HEAD
+  "trailingComma": "none"
+=======
   "trailingComma": "none",
   "endOfLine": "auto"
+>>>>>>> release
 }

@@ -1,11 +1,19 @@
 import compression from 'compression'
+<<<<<<< HEAD
+import { fileURLToPath } from 'url'
+=======
+>>>>>>> release
 import mongoose from 'mongoose'
 import express from 'express'
 import helmet from 'helmet'
 import multer from 'multer'
+<<<<<<< HEAD
+=======
 import path from 'path'
+>>>>>>> release
 import cors from 'cors'
 import Joi from 'joi'
+import path from 'path'
 
 import { shutdownMiddleware } from './utils/gracefulShutdown.js'
 import { requestLimiter } from './config/index.config.js'
@@ -13,7 +21,12 @@ import campaignsRoute from './routes/campaigns.route.js'
 import rewardsRoute from './routes/rewards.route.js'
 import { formatError } from './utils/index.util.js'
 import { NODE_ENV } from './constants.js'
+<<<<<<< HEAD
+
+const __dirname = path.resolve('..', 'frontend', 'public')
+=======
 import logger from './config/logger.config.js'
+>>>>>>> release
 
 const server = express()
 // Middlewares
@@ -23,7 +36,11 @@ server.use(cors({ origin: 'http://localhost:5173', credentials: true }))
 server.use(express.urlencoded({ extended: true }))
 server.use(express.json({ limit: '10mb' }))
 server.use(compression())
+<<<<<<< HEAD
+server.use(express.static(__dirname))
+=======
 server.use(express.static(path.resolve('..', 'frontend', 'dist')))
+>>>>>>> release
 
 // Routes
 server.get('/health-check', (req, res) => {
@@ -33,14 +50,21 @@ server.use('/api/v1/campaigns', requestLimiter, campaignsRoute)
 server.use('/api/v1/rewards', requestLimiter, rewardsRoute)
 
 server.get('/*', (req, res) => {
+<<<<<<< HEAD
+  res.sendFile(__dirname + '\\index.html')
+=======
   res.sendFile(path.resolve('..', 'frontend', 'dist', 'index.html'))
+>>>>>>> release
 })
 
 server.use((req, res) => {
   res.status(404).send('404: not found')
 })
 
+<<<<<<< HEAD
+=======
 // eslint-disable-next-line no-unused-vars
+>>>>>>> release
 server.use((error, req, res, next) => {
   let status = error?.statusCode || 500
   let message = formatError(error?.message) || 'Internal server error'
@@ -84,8 +108,13 @@ server.use((error, req, res, next) => {
 
   // console.log(message)
   // const message = formatError(error.message)
+<<<<<<< HEAD
+  const stack = NODE_ENV === 'development' && error.stack
+
+=======
   const stack = NODE_ENV === 'development' && error?.stack
   if (status == 500) logger.error(error)
+>>>>>>> release
   return res.status(status).json({
     success: false,
     status,

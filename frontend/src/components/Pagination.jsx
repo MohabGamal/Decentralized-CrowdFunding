@@ -1,6 +1,9 @@
+<<<<<<< HEAD
+=======
 import React from 'react'
 import PropTypes from 'prop-types'
 
+>>>>>>> release
 import { useStateContext } from '../context'
 
 const Pagination = ({ currentPage, totalPages }) => {
@@ -68,9 +71,12 @@ const Pagination = ({ currentPage, totalPages }) => {
   )
 }
 
+<<<<<<< HEAD
+=======
 Pagination.propTypes = {
   currentPage: PropTypes.number.isRequired,
   totalPages: PropTypes.number.isRequired
 }
 
+>>>>>>> release
 export default Pagination

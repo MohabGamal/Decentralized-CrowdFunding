@@ -25,6 +25,19 @@ export const addCampaign = async (req, res) => {
   res.status(201).json(savedCampaign)
 }
 
+<<<<<<< HEAD
+// PATCH /api/v1/campaigns/:id
+export const updateCampaign = async (req, res) => {
+  const reqId = req.params.id
+  const { id } = JoiValidate(mongoIdSchema, { id: reqId })
+  const validatedBody = JoiValidate(campaignUpdateSchema, req.body)
+
+  const updatedCampaign = await Campaign.findByIdAndUpdate(
+    id,
+    { $set: validatedBody },
+    { new: true }
+  )
+=======
 // PATCH /api/v1/campaigns/:campaignid
 export const updateCampaign = async (req, res) => {
   const { campaignId } = JoiValidate(campaignIdSchema, {
@@ -41,6 +54,7 @@ export const updateCampaign = async (req, res) => {
   //   { $set: validatedBody },
   //   { new: true }
   // )
+>>>>>>> release
 
   res.status(200).json(updatedCampaign)
 }

@@ -16,6 +16,10 @@ contract CrowdCharity {
         ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
     address public constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
+<<<<<<< HEAD
+    uint public campaignsCount = 0;
+=======
+>>>>>>> release
 
     struct Campaign {
         address owner;
@@ -70,6 +74,11 @@ contract CrowdCharity {
         uint amount
     );
 
+<<<<<<< HEAD
+    modifier campaignIdConstraints(uint campaignId) {
+        require(campaignId < campaignsCount, 'Campaign ID is out of range');
+        require(campaignId >= 0, 'Campaign ID is less than zero');
+=======
     /**
      * @notice Modifier to check if the campaign is open and greater than or equal zero.
      * @param _campaignId The id of the campaign to be funded.
@@ -77,6 +86,7 @@ contract CrowdCharity {
     modifier campaignIdConstraints(uint _campaignId) {
         require(_campaignId < campaignsCount, 'Campaign ID is out of range');
         require(_campaignId >= 0, 'Campaign ID is less than zero');
+>>>>>>> release
         _;
     }
 
@@ -132,10 +142,14 @@ contract CrowdCharity {
         // convert eth to weth to be traded as a normal ERC20 token
         IWETH(WETH9).deposit{value: msg.value}();
         // approve Uniswap router to spend this contract weth
+<<<<<<< HEAD
+        IWETH(WETH9).approve(address(SWAPROUTER), msg.value);
+=======
         require(
             IWETH(WETH9).approve(address(SWAPROUTER), msg.value),
             'WETH transfer approval failed'
         );
+>>>>>>> release
         // setting up the params for the swap
         ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
             .ExactInputSingleParams({
@@ -297,11 +311,18 @@ contract CrowdCharity {
         );
         uint _refundAmount = fundersContributions[_campaignId][msg.sender];
 
+<<<<<<< HEAD
+=======
         require(_refundAmount > 0, "You don't have any funds to be refunded");
+>>>>>>> release
         require(
             _tokenBalance >= _refundAmount,
             "You don't have enough tokens to refunded"
         );
+<<<<<<< HEAD
+        require(_refundAmount > 0, "You don't have any funds to be refunded");
+=======
+>>>>>>> release
         require(
             campaigns[_campaignId].softcap >
                 campaigns[_campaignId].raisedAmount,
@@ -337,6 +358,21 @@ contract CrowdCharity {
     ) external {
         require(_rewardTokenId > 0, 'Reward token id must be greater than 0');
         require(_target > 0, 'Target amount must be greater than 0');
+<<<<<<< HEAD
+        require(
+            _softcap > 0 && _softcap <= _target,
+            'Softcap must be greater than 0 and less than or equal target'
+        );
+        require(bytes(_title).length > 0, "Title can't be empty");
+        require(bytes(_image).length > 0, "image can't be empty");
+        for (uint i = 0; i < campaigns.length; i++) {
+            if (
+                campaigns[i].owner == msg.sender &&
+                campaigns[i].timeStamp + 7 days > block.timestamp
+            ) {
+                revert('You can start a new campaign every 7 days');
+            }
+=======
         require(_softcap <= _target, 'Softcap must be less than the target');
         require(
             _softcap >= (_target * 3) / 10,
@@ -350,6 +386,7 @@ contract CrowdCharity {
                     campaigns[i].timeStamp + 7 days > block.timestamp),
                 'You can start a new campaign every 7 days'
             );
+>>>>>>> release
         }
         campaigns.push(
             Campaign({
@@ -398,6 +435,38 @@ contract CrowdCharity {
      * @notice Returns all campaigns in the campaigns array.
      * @return Campaign[] An array of all campaigns.
      */
+<<<<<<< HEAD
+    function getCampaign(
+        uint _campaignId
+    )
+        public
+        view
+        campaignIdConstraints(_campaignId)
+        returns (
+            address owner,
+            uint target,
+            uint raisedAmount,
+            bool isOpen,
+            string memory image,
+            string memory title
+        )
+    {
+        return (
+            campaigns[_campaignId].owner,
+            campaigns[_campaignId].target,
+            campaigns[_campaignId].raisedAmount,
+            campaigns[_campaignId].isOpen,
+            campaigns[_campaignId].image,
+            campaigns[_campaignId].title
+        );
+    }
+
+    /**
+     * @notice Returns all campaigns in the campaigns array.
+     * @return Campaign[] An array of all campaigns.
+     */
+=======
+>>>>>>> release
     function getAllCampaigns() public view returns (Campaign[] memory) {
         return campaigns;
     }
@@ -410,6 +479,14 @@ contract CrowdCharity {
     function getCampaignsByIds(
         uint[] memory campaignIds
     ) public view returns (Campaign[] memory) {
+<<<<<<< HEAD
+        Campaign[] memory matchingCampaigns = new Campaign[](
+            campaignIds.length
+        );
+        uint matchingCount = 0;
+
+        for (uint i = 0; i < campaignIds.length; i++) {
+=======
 
         uint matchingCount;
         uint campaignsIdsCount = campaignIds.length;
@@ -419,6 +496,7 @@ contract CrowdCharity {
         );
 
         for (uint i; i < campaignsIdsCount; ++i) {
+>>>>>>> release
             if (campaignIds[i] < campaignsCount) {
                 require(campaignIds[i] >= 0, 'input id must be greater than 0');
                 require(
@@ -433,16 +511,36 @@ contract CrowdCharity {
         // Create a new array with the correct length
         Campaign[] memory result = new Campaign[](matchingCount);
         // Copy the matching campaigns into the new array
+<<<<<<< HEAD
+        for (uint i = 0; i < matchingCount; i++) {
+=======
         for (uint i; i < matchingCount; ++i) {
+>>>>>>> release
             result[i] = matchingCampaigns[i];
         }
         return result;
     }
 
+<<<<<<< HEAD
+    /** @notice receive & fallback are unique functions to receive ether as donation to this app
+     */
+    receive() external payable {}
+
+    fallback() external payable {
+        rewardContract.mint(msg.sender, 0, msg.value); // special reward only for our supports ;)
+    }
+
+    // Just for testing
+
+    function dummy() external view returns (uint) {
+        return IERC20(DAI).balanceOf(msg.sender);
+    }
+=======
     // Just for testing
     // function dummy() external view returns (uint) {
     //     return IERC20(DAI).balanceOf(msg.sender);
     // }
+>>>>>>> release
 
     //     address public constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     //     function single_Swap_For_Testing(address _recipient, address _tokenOut)

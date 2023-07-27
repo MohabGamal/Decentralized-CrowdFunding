@@ -1,5 +1,9 @@
 import axios from 'axios'
+<<<<<<< HEAD
+import { useState } from 'react'
+=======
 import React, { useState } from 'react'
+>>>>>>> release
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { parseEther } from 'ethers/lib/utils'
@@ -8,7 +12,11 @@ import { useStateContext } from '../context'
 import { CustomButton, FormField, Loader, MetMaskButton } from '../components'
 import { JoiValidate, formatError } from './../utils'
 import { campaignIdSchema, campaignCreateSchema } from '../validators/campaigns'
+<<<<<<< HEAD
+import { imagePlaceholder, metamask } from '../assets'
+=======
 import { imagePlaceholder } from '../assets'
+>>>>>>> release
 
 const CreateCampaign = () => {
   const navigate = useNavigate()
@@ -25,14 +33,22 @@ const CreateCampaign = () => {
     image: {}
   })
 
+<<<<<<< HEAD
+  const { campaignContract, signer, address, connect } = useStateContext()
+=======
   const { campaignContract, signer, address } = useStateContext()
+>>>>>>> release
 
   const handleFormFieldChange = (fieldName, e) => {
     const { value, files } = e.target
 
     if (fieldName === 'image') {
       if (files && files[0]?.type.startsWith('image/')) {
+<<<<<<< HEAD
+        setForm({ ...form, ['image']: files })
+=======
         setForm({ ...form, image: files })
+>>>>>>> release
         setChosenImage(URL.createObjectURL(files[0]))
       } else {
         toast.error('Only images are allowed!')
@@ -47,7 +63,11 @@ const CreateCampaign = () => {
     formData.append('file', image[0])
 
     const imageUrl = await axios.post(
+<<<<<<< HEAD
+      `http://localhost:8080/api/v1/campaigns/uploadImage`,
+=======
       'http://localhost:8000/api/v1/campaigns/uploadImage',
+>>>>>>> release
       formData,
       {
         headers: {
@@ -96,8 +116,14 @@ const CreateCampaign = () => {
         title,
         imageUrl
       )
+<<<<<<< HEAD
+      if (campaignId == undefined) return
+
+      await axios.post(`http://localhost:8080/api/v1/campaigns/`, {
+=======
 
       await axios.post('http://localhost:8000/api/v1/campaigns/', {
+>>>>>>> release
         campaignId,
         desc,
         category,
@@ -152,7 +178,11 @@ const CreateCampaign = () => {
           />
           <FormField
             labelName="Softcap *"
+<<<<<<< HEAD
+            placeholder="50$"
+=======
             placeholder="Must be > 30% of goal!"
+>>>>>>> release
             inputType="number"
             value={form.softcap}
             handleChange={(e) => handleFormFieldChange('softcap', e)}
@@ -160,9 +190,14 @@ const CreateCampaign = () => {
         </div>
         <FormField
           labelName="Story *"
+<<<<<<< HEAD
+          placeholder="Write your story"
+          isTextArea
+=======
           placeholder="Write your story..."
           isTextArea
           inputType="text"
+>>>>>>> release
           value={form.desc}
           handleChange={(e) => handleFormFieldChange('desc', e)}
         />
@@ -214,7 +249,11 @@ const CreateCampaign = () => {
             <CustomButton
               btnType="submit"
               title="Submit new campaign"
+<<<<<<< HEAD
+              styles="bg-[#1dc071]"
+=======
               styles="bg-primary"
+>>>>>>> release
               handleClick={handleSubmit}
             />
           ) : (

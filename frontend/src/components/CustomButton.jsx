@@ -1,6 +1,9 @@
+<<<<<<< HEAD
+=======
 import React from 'react'
 import PropTypes from 'prop-types'
 
+>>>>>>> release
 const CustomButton = ({ btnType, title, handleClick, styles }) => {
   return (
     <button
@@ -13,6 +16,8 @@ const CustomButton = ({ btnType, title, handleClick, styles }) => {
   )
 }
 
+<<<<<<< HEAD
+=======
 CustomButton.propTypes = {
   btnType: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
@@ -20,4 +25,5 @@ CustomButton.propTypes = {
   styles: PropTypes.string.isRequired
 }
 
+>>>>>>> release
 export default CustomButton

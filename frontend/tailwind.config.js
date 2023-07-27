@@ -14,8 +14,12 @@ module.exports = {
       },
       colors: {
         dark: '#1c1c24',
+<<<<<<< HEAD
+        light: '#e4dfdf'
+=======
         light: '#e4dfdf',
         primary: '#1dc071'
+>>>>>>> release
       }
     },
     plugins: []

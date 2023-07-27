@@ -12,6 +12,11 @@ export const campaignCreateSchema = Joi.object({
   desc: Joi.string().required(),
   category: Joi.string().required(),
   message: Joi.string(),
+<<<<<<< HEAD
+  image: FileListValidation.fileList().required(),
+  target: Joi.number().integer().min(1).required(),
+  softcap: Joi.number().integer().min(1).required()
+=======
   target: Joi.number().integer().min(1).required(),
   softcap: Joi.number().integer().min(1).required(),
   image: FileListValidation.fileList().required()
@@ -21,6 +26,7 @@ export const campaignUpdateSchema = Joi.object({
   desc: Joi.string().required(),
   category: Joi.string().required(),
   message: Joi.string()
+>>>>>>> release
 })
 
 export const campaignIdSchema = Joi.object({

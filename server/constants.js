@@ -1,17 +1,32 @@
+<<<<<<< HEAD
+=======
 /* eslint-disable no-undef */
+>>>>>>> release
 import dotenv from 'dotenv'
 dotenv.config()
 
 export const MONGO_PRODUCTION_URI = process.env.MONGO_PRODUCTION_URI
 export const MONGO_DEVELOPMENT_URI = process.env.MONGO_DEVELOPMENT_URI
+<<<<<<< HEAD
+export const MONGO_TEST_URI = process.env.MONGO_TEST_URI
+=======
+>>>>>>> release
 export const PORT = process.env.PORT
 export const NODE_ENV = process.env.NODE_ENV
 export const JSON_RPC_ETHEREUM_PROVIDER = process.env.JSON_RPC_ETHEREUM_PROVIDER
 export const WEB3_STORAGE_TOKEN = process.env.WEB3_STORAGE_TOKEN
+<<<<<<< HEAD
+
+export const CAMPAIGN_CONTRACT_ADDRESS =
+  '0xE2b5bDE7e80f89975f7229d78aD9259b2723d11F'
+export const REWARD_CONTRACT_ADDRESS =
+  '0xa635fD1c2e67d2e6551b3037699DF2AB5B8Dba09'
+=======
 export const CAMPAIGN_CONTRACT_ADDRESS =
   '0xeb06D7AbA4Ae11B9a078AFE08cBeBE2d5DC5da02'
 export const REWARD_CONTRACT_ADDRESS =
   '0x06F249780125f7C81cF53Eb3613858958203b9Dc'
+>>>>>>> release
 
 export const CAMPAIGN_CONTRACT_ABI = [
   {
