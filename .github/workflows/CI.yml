@@ -1,21 +1,21 @@
 name: D-crowdfunding CI
 on:
   push:
-    branches: [main]
+    branches: [ master ]
   pull_request:
-    branches: [main]
+    branches: [ master ]
   workflow_dispatch:
+
 
 jobs:
   build:
     env:
       CI: true
-      # MONGO_URL: mongodb://localhost/nasa
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [18.x, 16.x]
         # mongodb-version: ['6.7']
-    runs-on: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: [windows-latest]
     steps:
       - name: Checkout Github code
         uses: actions/checkout@v3
@@ -23,48 +23,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Upload .env file
-        uses: actions/upload-artifact@v2
-        with:
-          name: env
-          path: server/.env
       # - name: Use MongoDB from GitHub actions
       #   uses: supercharge/mongodb-github-action@1.6.0
       #   with:
       #     mongodb-version: ${{ matrix.mongodb-version }}
-      - name: install all dependencies
-        run: npm install
-
-      - name: compile smart contracts
-        run: npm run compile --prefix blockchain
-      # - name: test smart contracts
-      #   run: npm run test --prefix blockchain
-      - name: deploy smart contracts
-        run: npm run deploy:CI --prefix blockchain
-
-      - name: start server
-        run: npm run dev --prefix server
-      - name: test server
-        run: npm run test --prefix server
-
-      - name: build client
-        run: npm run build --prefix client
-  deploy:
-    needs: build
-    runs-on: alpine-latest
-    steps:
-      - name: Checkout Github code
-        uses: actions/checkout@v2
-        env:
-          CI: true
-      - name: Upload .env file
-        uses: actions/upload-artifact@v2
-        with:
-          name: env
-          path: server/.env
-      - name: install production dependencies
-        uses: npm install --only=production
-      - name: build frontend
-        run: npm run build --prefix frontend
-      - name: start server
-        run: npm run start --prefix server
+      - run: npm install
+      - run: npm run compile 
+      - run: npm run test
+      - run: npm run deploy
+      # - run: npm run start
+      

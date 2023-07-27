@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 import { tagType, ethereum } from '../assets'
 import { formatDate } from '../utils'
 // #e4dfdf
 // #ffffff
+=======
+import React from 'react'
+import PropTypes from 'prop-types'
+
+import { tagType, ethereum } from '../assets'
+import { formatDate } from '../utils'
+
+>>>>>>> release
 const FundCard = ({
   owner,
   title,
@@ -70,7 +79,11 @@ const FundCard = ({
             </p>
             <h4
               className={`font-epilogue font-semibold text-[15px] leading-[22px] ${
+<<<<<<< HEAD
                 status === 'Open' ? 'text-[#1dc071]' : 'text-[#c70039]'
+=======
+                status === 'Open' ? 'text-primary' : 'text-[#c70039]'
+>>>>>>> release
               } `}
             >
               {status}
@@ -96,4 +109,20 @@ const FundCard = ({
   )
 }
 
+<<<<<<< HEAD
+=======
+FundCard.propTypes = {
+  owner: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  target: PropTypes.number.isRequired,
+  category: PropTypes.string.isRequired,
+  timeStamp: PropTypes.number.isRequired,
+  status: PropTypes.string.isRequired,
+  amountCollected: PropTypes.number.isRequired,
+  image: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired
+}
+
+>>>>>>> release
 export default FundCard

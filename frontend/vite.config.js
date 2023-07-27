@@ -7,5 +7,24 @@ export default defineConfig({
   define: {
     'global': 'globalThis',
     'process.env': {}
+<<<<<<< HEAD
+=======
+  },
+  // to fix the issue of vite not able to build because of some chunks are larger than 500 kBs
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id
+              .toString()
+              .split('node_modules/')[1]
+              .split('/')[0]
+              .toString()
+          }
+        }
+      }
+    }
+>>>>>>> release
   }
 })

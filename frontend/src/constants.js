@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   createCampaign,
   dashboard,
@@ -6,17 +7,28 @@ import {
   profile,
   withdraw
 } from './assets'
+=======
+import { profile, cards, announce } from './assets'
+>>>>>>> release
 
 export const navlinks = [
   {
     name: 'dashboard',
+<<<<<<< HEAD
     imgUrl: dashboard,
+=======
+    imgUrl: cards,
+>>>>>>> release
     link: '/',
     pageUrl: 'http://localhost:5173/'
   },
   {
     name: 'Create Campaign',
+<<<<<<< HEAD
     imgUrl: createCampaign,
+=======
+    imgUrl: announce,
+>>>>>>> release
     link: '/create-campaign',
     pageUrl: 'http://localhost:5173/create-campaign'
   },
@@ -29,7 +41,11 @@ export const navlinks = [
 ]
 
 export const CAMPAIGN_CONTRACT_ADDRESS =
+<<<<<<< HEAD
   '0xE2b5bDE7e80f89975f7229d78aD9259b2723d11F'
+=======
+  '0xeb06D7AbA4Ae11B9a078AFE08cBeBE2d5DC5da02'
+>>>>>>> release
 
 export const CAMPAIGN_CONTRACT_ABI = [
   {

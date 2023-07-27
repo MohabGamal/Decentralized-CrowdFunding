@@ -1,13 +1,11 @@
-# blockchain/node_modules
-# frontend/node_modules
-# server/node_modules
-# server/.env
 CrowdFunding.code-workspace
 .vscode
-blockchain/artifacts
+blockchain/artifacts    
 blockchain/cache
 # package.json
 node_modules
 .env
 coverage
+frontend/dist
 logs.log
+logs

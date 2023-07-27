@@ -14,6 +14,7 @@ const devLogFormat = printf((info) => {
 
 let logger
 
+<<<<<<< HEAD
 if (NODE_ENV === 'development') {
   logger = winston.createLogger({
     level: 'info', // info and above types like warn, error, etc. will be logged
@@ -37,11 +38,30 @@ if (NODE_ENV === 'development') {
       ]
   logger = winston.createLogger({
     level: 'info', // warn and above types like error will be logged
+=======
+if (NODE_ENV === 'production') {
+  logger = winston.createLogger({
+    level: 'info',
+>>>>>>> release
     format: combine(
       timestamp({ format: 'MMM-DD-YYYY HH:mm:ss' }),
       productionLogFormat
     ),
+<<<<<<< HEAD
     transports
+=======
+    transports: [
+      new winston.transports.File({
+        filename: './logs/logs.log'
+      })
+    ]
+  })
+} else {
+  logger = winston.createLogger({
+    level: 'info', // info and above types like warn, error, etc. will be logged
+    format: combine(winston.format.colorize(), devLogFormat),
+    transports: [new winston.transports.Console({})]
+>>>>>>> release
   })
 }
 

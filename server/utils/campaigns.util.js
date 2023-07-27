@@ -20,9 +20,15 @@ export const fetchCampaigns = async (campaignsIds) => {
     return {
       owner: campaign.owner,
       title: campaign.title,
+<<<<<<< HEAD
       description: dbData[i].desc,
       category: dbData[i].category,
       message: dbData[i].message,
+=======
+      description: dbData[i]?.desc,
+      category: dbData[i]?.category,
+      message: dbData[i]?.message,
+>>>>>>> release
       target: bigNumberToInt(campaign.target),
       softcap: bigNumberToInt(campaign.softcap),
       amountCollected: bigNumberToInt(campaign.raisedAmount),

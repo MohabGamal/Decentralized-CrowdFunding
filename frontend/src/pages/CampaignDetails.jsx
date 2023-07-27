@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ethereum, loader, withdraw } from '../assets'
@@ -6,6 +7,17 @@ import {
   CountBox,
   CustomButton,
   Loader,
+=======
+import React, { useState } from 'react'
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
+import { ethereum, loader } from '../assets'
+import { useStateContext } from '../context'
+import {
+  CountBox,
+  Loader,
+  Modal,
+>>>>>>> release
   MetMaskButton,
   UserRewards
 } from '../components'
@@ -13,6 +25,7 @@ import { useFetch } from '../hooks'
 import { JoiValidate, calculatePercentage, formatError } from '../utils'
 import { toast } from 'react-toastify'
 import { parseEther } from 'ethers/lib/utils'
+<<<<<<< HEAD
 import { campaignIdSchema, donationAmountSchema } from '../validators/campaigns'
 
 const CampaignDetails = () => {
@@ -38,6 +51,44 @@ const CampaignDetails = () => {
     [address]
   )
 
+=======
+
+import { closeSvg, saveSvg, withdrawSvg, editSvg, refundSvg } from '../assets'
+import {
+  campaignIdSchema,
+  campaignUpdateSchema,
+  donationAmountSchema
+} from '../validators/campaigns'
+
+const CampaignDetails = () => {
+  const { id } = useParams()
+  const { campaignContract, signer, address } = useStateContext()
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [amount, setAmount] = useState('')
+  const [editMode, setEditMode] = useState(false)
+  const [editForm, setEditForm] = useState({
+    desc: '',
+    message: '',
+    category: ''
+  })
+  const [modalContent, setModalContent] = useState({
+    isOpen: false,
+    message: '',
+    warningMessage: false,
+    onConfirm: null
+  })
+  const { data: campaign, reFetch } = useFetch(
+    `http://localhost:8000/api/v1/campaigns/${id}`
+  )
+  // console.log(campaign)
+  const userDonation = useFetch(
+    `http://localhost:8000/api/v1/campaigns/donations/${id}/${address}`,
+    null,
+    [address]
+  )
+
+>>>>>>> release
   const unWithdrawnAmount =
     campaign?.amountCollected - campaign?.withdrawnAmount
   const barPercentage = calculatePercentage(
@@ -50,13 +101,29 @@ const CampaignDetails = () => {
     campaign?.softcap
   )
 
+<<<<<<< HEAD
   const handleDonate = async () => {
     if (campaign?.owner === address) return
     setIsLoading(true)
+=======
+  function activateEditMode() {
+    if (campaign?.owner !== address) return
+    setEditMode(!editMode)
+    setEditForm({
+      desc: campaign?.description,
+      message: campaign?.message,
+      category: campaign?.category
+    })
+  }
+
+  const handleEdit = async () => {
+    if (campaign?.owner !== address) return
+>>>>>>> release
     try {
       const { campaignId } = JoiValidate(campaignIdSchema, {
         campaignId: campaign?.pId
       })
+<<<<<<< HEAD
 
       const { donationAmount } = JoiValidate(donationAmountSchema, {
         donationAmount: amount
@@ -76,13 +143,59 @@ const CampaignDetails = () => {
   const handleWithdraw = async () => {
     if (campaign?.owner !== address) return
     setIsLoading(true)
+=======
+      const validatedEditForm = JoiValidate(campaignUpdateSchema, editForm)
+      await axios.patch(
+        `http://localhost:8000/api/v1/campaigns/${campaignId}`,
+        validatedEditForm
+      )
+      toast.success('Campaign edited successfuly!')
+      setEditMode(!editMode)
+      await reFetch()
+    } catch (error) {
+      toast.error(formatError(error))
+    }
+  }
+
+  const handleDonate = async () => {
+    if (campaign?.owner === address) return
+    setIsLoading(true)
+    try {
+      const { campaignId } = JoiValidate(campaignIdSchema, {
+        campaignId: campaign?.pId
+      })
+
+      const { donationAmount } = JoiValidate(donationAmountSchema, {
+        donationAmount: amount
+      })
+      await campaignContract.connect(signer).fundInEth(campaignId, {
+        value: parseEther(donationAmount?.toString())
+      })
+      toast.success('Funded!')
+      await reFetch()
+    } catch (error) {
+      toast.error(formatError(error))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleWithdraw = async () => {
+    if (campaign?.owner !== address) return
+    setIsLoading(true)
+>>>>>>> release
     try {
       const { campaignId } = JoiValidate(campaignIdSchema, {
         campaignId: campaign?.pId
       })
       await campaignContract.connect(signer).withdrawFunds(campaignId)
+<<<<<<< HEAD
       reFetch()
       toast.success('Funds withdrawn successfully!')
+=======
+      toast.success('Funds withdrawn successfully!')
+      await reFetch()
+>>>>>>> release
     } catch (error) {
       toast.error(formatError(error))
     } finally {
@@ -98,13 +211,19 @@ const CampaignDetails = () => {
         campaignId: campaign?.pId
       })
       await campaignContract.connect(signer).closeCampaign(campaignId)
+<<<<<<< HEAD
       reFetch()
       toast.success('Campaign closed!')
+=======
+      toast.success('Campaign closed!')
+      await reFetch()
+>>>>>>> release
     } catch (error) {
       toast.error(formatError(error))
     } finally {
       setIsLoading(false)
     }
+<<<<<<< HEAD
   }
 
   const handleRefund = async () => {
@@ -284,11 +403,33 @@ const CampaignDetails = () => {
         </g>
       </svg>
     )
+=======
+>>>>>>> release
   }
+
+  const handleRefund = async () => {
+    if (campaign?.owner === address) return
+    setIsLoading(true)
+    try {
+      const { campaignId } = JoiValidate(campaignIdSchema, {
+        campaignId: campaign?.pId
+      })
+      await campaignContract.connect(signer).refund(campaignId)
+      toast.success('Refunded!')
+      await userDonation.reFetch()
+    } catch (error) {
+      toast.error(formatError(error))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // {isModalOpen && (
 
   return (
     <div>
       {isLoading && <Loader />}
+      <Modal modalContent={modalContent} setModalContent={setModalContent} />
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex-col flex-1">
           {campaign ? (
@@ -318,7 +459,11 @@ const CampaignDetails = () => {
               style={{ left: softcapPercentage + '%' }}
             ></div>
             <p
+<<<<<<< HEAD
               className="absolute text-sm top-6 dark:text-light"
+=======
+              className="absolute text-xs top-6 dark:text-light"
+>>>>>>> release
               style={{ left: 'calc(' + softcapPercentage + '% - 25px)' }}
             >
               Softcap ({softcapPercentage}%)
@@ -330,25 +475,49 @@ const CampaignDetails = () => {
             title="Status"
             value={campaign?.status}
             styles={{
+<<<<<<< HEAD
               text: campaign?.status === 'Open' ? '[#1dc071]' : '[#c70039]'
+=======
+              text: campaign?.status === 'Open' ? 'primary' : '[#c70039]'
+>>>>>>> release
             }}
           />
           <CountBox
             title={`Raised of ${campaign?.target}`}
-            value={campaign?.amountCollected}
+            value={campaign?.amountCollected.toString()}
           />
-          <CountBox title="Total Funds" value={campaign?.donations?.length} />
+          <CountBox
+            title="Total Funds"
+            value={campaign?.donations?.length.toString()}
+          />
         </div>
       </div>
       <div className="flex gap-2 mt-6 flex-wrap">
         {campaign?.owner !== address ? (
           <button
+<<<<<<< HEAD
             onClick={handleRefund}
             className={`flex items-center justify-center gap-1 px-2 py-1 text-sm font-bold text-green-700 transition duration-200 ease-in-out bg-green-100 border border-green-600 rounded cursor-pointer hover:scale-105 focus:outline-none hover:bg-green-700 hover:text-green-100
           ${
             (userDonation?.data > 0 ||
               campaign?.softcap > campaign?.amountCollected) &&
             'grayscale pointer-events-none cursor-not-allowed'
+=======
+            // onClick={handleRefund}
+            onClick={() =>
+              setModalContent({
+                isOpen: true,
+                message: `are you sure you want to refund ${userDonation?.data}$ from your campaign donation? (irreversible action!!)`,
+                onConfirm: handleRefund
+              })
+            }
+            className={`flex items-center justify-center gap-1 px-2 py-1 text-sm font-bold text-green-700 transition duration-200 ease-in-out bg-green-100 border border-green-600 rounded cursor-pointer hover:scale-105 focus:outline-none hover:bg-green-700 hover:text-green-100
+          ${
+            !(
+              userDonation?.data > 0 &&
+              campaign?.softcap > campaign?.amountCollected
+            ) && 'grayscale pointer-events-none opacity-50'
+>>>>>>> release
           }`}
           >
             <div className="flex leading-5">{refundSvg()}</div>
@@ -357,18 +526,36 @@ const CampaignDetails = () => {
         ) : (
           <>
             <button
+<<<<<<< HEAD
               onClick={handleWithdraw}
               className={`flex items-center justify-center gap-1 px-2 py-1 text-sm font-bold text-green-700 transition duration-200 ease-in-out bg-green-100 border border-green-600 rounded cursor-pointer hover:scale-105 focus:outline-none hover:bg-green-700 hover:text-green-100
               ${
                 (unWithdrawnAmount > 0 ||
                   campaign?.softcap < campaign?.amountCollected) &&
                 'grayscale pointer-events-none cursor-not-allowed'
+=======
+              // onClick={handleWithdraw}
+              onClick={() =>
+                setModalContent({
+                  isOpen: true,
+                  message: `are you sure you want to withdraw ${unWithdrawnAmount}$ from your campaign funds? (irreversible action!!)`,
+                  onConfirm: handleWithdraw
+                })
+              }
+              className={`flex items-center justify-center gap-1 px-2 py-1 text-sm font-bold text-green-700 transition duration-200 ease-in-out bg-green-100 border border-green-600 rounded cursor-pointer hover:scale-105 focus:outline-none hover:bg-green-700 hover:text-green-100
+              ${
+                !(
+                  unWithdrawnAmount > 0 &&
+                  campaign?.amountCollected > campaign?.softcap
+                ) && 'grayscale pointer-events-none opacity-50'
+>>>>>>> release
               }`}
             >
               <div className="flex mt-1 leading-5">{withdrawSvg()}</div>
               Withdraw ({unWithdrawnAmount}
               $)
             </button>
+<<<<<<< HEAD
             {campaign?.status === 'Open' && (
               <>
                 <button
@@ -376,6 +563,22 @@ const CampaignDetails = () => {
                   className={`flex justify-center px-4 py-2 text-base font-bold text-green-700 transition duration-200 ease-in-out bg-green-100 border border-green-600 rounded cursor-pointer hover:scale-105 focus:outline-none hover:bg-green-700 hover:text-green-100 ${
                     !editMode && 'hidden'
                   }`}
+=======
+            {campaign?.status == 'Open' && (
+              <>
+                <button
+                  // onClick={handleEdit}
+                  onClick={() =>
+                    setModalContent({
+                      isOpen: true,
+                      message: 'Are you sure you want to edit this campaign?',
+                      onConfirm: handleEdit
+                    })
+                  }
+                  className={`${
+                    !editMode && 'hidden'
+                  } flex justify-center px-4 py-2 text-base font-bold text-green-700 transition duration-200 ease-in-out bg-green-100 border border-green-600 rounded cursor-pointer hover:scale-105 focus:outline-none hover:bg-green-700 hover:text-green-100 `}
+>>>>>>> release
                 >
                   <div className="flex leading-5">
                     {saveSvg()}
@@ -383,10 +586,17 @@ const CampaignDetails = () => {
                   </div>
                 </button>
                 <button
+<<<<<<< HEAD
                   onClick={() => setEditMode(!editMode)}
                   className={`flex justify-center px-4 py-2 text-base font-bold text-green-700 transition duration-200 ease-in-out bg-green-100 border border-green-600 rounded cursor-pointer hover:scale-105 focus:outline-none hover:bg-green-700 hover:text-green-100 ${
                     editMode && 'hidden'
                   }`}
+=======
+                  onClick={activateEditMode}
+                  className={`${
+                    editMode && 'hidden'
+                  } flex justify-center px-4 py-2 text-base font-bold text-green-700 transition duration-200 ease-in-out bg-green-100 border border-green-600 rounded cursor-pointer hover:scale-105 focus:outline-none hover:bg-green-700 hover:text-green-100 `}
+>>>>>>> release
                 >
                   <div className="flex leading-5">
                     {editSvg()}
@@ -394,7 +604,20 @@ const CampaignDetails = () => {
                   </div>
                 </button>
                 <button
+<<<<<<< HEAD
                   onClick={handleClose}
+=======
+                  // onClick={handleClose}
+                  onClick={() =>
+                    setModalContent({
+                      isOpen: true,
+                      message:
+                        'Are you sure you want to close this campaign? (irreversible action!!)',
+                      warningMessage: true,
+                      onConfirm: handleClose
+                    })
+                  }
+>>>>>>> release
                   className="flex items-center justify-center gap-1 px-4 py-2 text-sm font-bold text-red-700 transition duration-200 ease-in-out bg-red-100 border border-red-600 rounded cursor-pointer hover:scale-105 focus:outline-none hover:bg-red-700 hover:text-red-100"
                 >
                   <div className="flex leading-5">{closeSvg()}</div>
@@ -428,24 +651,36 @@ const CampaignDetails = () => {
               </div>
             </div>
           </div>
-
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] dark:text-white uppercase">
               Story
             </h4>
-
             <div className="mt-[20px]">
-              <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify break-all">
-                {campaign?.description}
-              </p>
+              {editMode ? (
+                <textarea
+                  defaultValue={campaign?.description}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, desc: e.target.value })
+                  }
+                  rows={10}
+                  placeholder="Enter your story here..."
+                  className="w-full sm:min-w-[300px] py-[15px] px-[15px] sm:px-[25px] outline-none border-[1px] border-[#a5a5a6] dark:border-[#3a3a43] bg-transparent font-epilogue dark:text-white text-[16px] placeholder:text-[#4b5264] rounded-[10px]"
+                />
+              ) : (
+                <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify break-all">
+                  {campaign?.description}
+                </p>
+              )}
             </div>
           </div>
-
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] dark:text-white uppercase">
               Funds
             </h4>
+<<<<<<< HEAD
 
+=======
+>>>>>>> release
             <div className="mt-[10px] flex flex-col gap-4">
               {campaign?.donations && campaign?.donations?.length > 0 ? (
                 campaign?.donations?.map((item, index) => (
@@ -472,7 +707,11 @@ const CampaignDetails = () => {
             </div>
           </div>
         </div>
+<<<<<<< HEAD
         {campaign?.owner !== address && campaign?.status === 'Open' && (
+=======
+        {campaign?.status == 'Open' && (
+>>>>>>> release
           <div className="flex-1">
             <h4 className="font-epilogue font-semibold text-[18px] dark:text-white uppercase">
               Fund
@@ -497,16 +736,36 @@ const CampaignDetails = () => {
                   <h4 className="font-epilogue font-semibold text-[14px] leading-[22px] dark:text-white">
                     Thanks Notation:
                   </h4>
-                  <p className="mt-[20px] font-epilogue font-normal leading-[22px] text-[#808191]">
-                    {campaign?.message}
-                  </p>
+                  {editMode ? (
+                    <input
+                      defaultValue={campaign?.message}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, message: e.target.value })
+                      }
+                      type="text"
+                      placeholder="please..."
+                      className="w-full sm:min-w-[250px] py-[15px] sm:px-[25px] px-[15px] outline-none border-[1px] border-[#a5a5a6] dark:border-[#3a3a43] bg-transparent font-epilogue dark:text-white text-[14px] placeholder:text-[#4b5264] rounded-[10px]"
+                    />
+                  ) : (
+                    <p className="mt-[20px] font-epilogue font-normal leading-[22px] text-[#808191]">
+                      {campaign?.message}
+                    </p>
+                  )}
                 </div>
 
                 {address ? (
                   <button
                     type="button"
                     onClick={handleDonate}
+<<<<<<< HEAD
                     className="w-full hover:scale-105 text-gray-900 bg-gray-100 dark:bg-gray-800 dark:text-white focus:ring-4 focus:outline-none focus:ring-gray-100 font-bold rounded-lg text-md px-5 py-2.5 text-center justify-center inline-flex items-center dark:focus:ring-gray-500 "
+=======
+                    className={`w-full hover:scale-105 text-gray-900 bg-gray-100 dark:bg-gray-800 dark:text-white focus:ring-4 focus:outline-none focus:ring-gray-100 font-bold rounded-lg text-md px-5 py-2.5 text-center justify-center inline-flex items-center dark:focus:ring-gray-500
+                    ${
+                      campaign?.owner == address &&
+                      'pointer-events-none opacity-50'
+                    }`}
+>>>>>>> release
                   >
                     <svg
                       className="w-8 h-8 mr-2 ml-1 text-[#626890] dark:text-white"

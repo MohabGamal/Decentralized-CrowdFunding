@@ -1,7 +1,12 @@
+<<<<<<< HEAD
+=======
+import React, { useEffect, useState } from 'react'
+>>>>>>> release
 import { DisplayCampaigns } from '../components'
 import useFetch from './../hooks/useFetch'
 import { useStateContext } from '../context'
 import Pagination from './../components/Pagination'
+<<<<<<< HEAD
 import { useEffect, useState } from 'react'
 
 const Home = () => {
@@ -19,6 +24,25 @@ const Home = () => {
   } = useFetch(url.href, {}, [searchQuery])
   // console.log(campaigns)
 
+=======
+
+const Home = () => {
+  const { searchQuery, page } = useStateContext()
+  // eslint-disable-next-line no-unused-vars
+  const [limit, setLimit] = useState(2)
+  const [paginatedCampaigns, setPaginatedCampaigns] = useState([])
+
+  const url = new URL('http://localhost:8000/api/v1/campaigns')
+  url.searchParams.append('q', searchQuery)
+
+  const { data: campaigns, loading: isCampaignsLoading } = useFetch(
+    url.href,
+    null,
+    [searchQuery]
+  )
+  // console.log(campaigns)
+
+>>>>>>> release
   const totalPages = Math.ceil(campaigns?.length / limit)
 
   useEffect(() => {

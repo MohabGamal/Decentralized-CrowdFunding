@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useFetch } from '../hooks'
 
 function UserRewards({ address }) {
@@ -13,6 +14,20 @@ function UserRewards({ address }) {
     error: userRewardsBalancesError
   } = useFetch(
     `http://localhost:8080/api/v1/rewards/profiles/${address}/`,
+=======
+import React from 'react'
+import { useFetch } from '../hooks'
+
+import PropTypes from 'prop-types'
+
+function UserRewards({ address }) {
+  const { data: rewardTokens } = useFetch(
+    'http://localhost:8000/api/v1/rewards/'
+  )
+
+  const { data: userRewardsBalances } = useFetch(
+    `http://localhost:8000/api/v1/rewards/profiles/${address}/`,
+>>>>>>> release
     {},
     [address]
   )
@@ -35,6 +50,7 @@ function UserRewards({ address }) {
       })}
     </>
   )
+<<<<<<< HEAD
 
   // return (
   //   <>
@@ -72,4 +88,12 @@ function UserRewards({ address }) {
   // )
 }
 
+=======
+}
+
+UserRewards.propTypes = {
+  address: PropTypes.string
+}
+
+>>>>>>> release
 export default UserRewards

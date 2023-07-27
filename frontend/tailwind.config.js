@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// eslint-disable-next-line no-undef
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
@@ -13,7 +14,12 @@ module.exports = {
       },
       colors: {
         dark: '#1c1c24',
+<<<<<<< HEAD
         light: '#e4dfdf'
+=======
+        light: '#e4dfdf',
+        primary: '#1dc071'
+>>>>>>> release
       }
     },
     plugins: []

@@ -25,6 +25,7 @@ export const addCampaign = async (req, res) => {
   res.status(201).json(savedCampaign)
 }
 
+<<<<<<< HEAD
 // PATCH /api/v1/campaigns/:id
 export const updateCampaign = async (req, res) => {
   const reqId = req.params.id
@@ -36,6 +37,24 @@ export const updateCampaign = async (req, res) => {
     { $set: validatedBody },
     { new: true }
   )
+=======
+// PATCH /api/v1/campaigns/:campaignid
+export const updateCampaign = async (req, res) => {
+  const { campaignId } = JoiValidate(campaignIdSchema, {
+    campaignId: req.params.campaignId
+  })
+  const validatedBody = JoiValidate(campaignUpdateSchema, req.body)
+  const updatedCampaign = await Campaign.findOneAndUpdate(
+    { campaignId },
+    { $set: validatedBody },
+    { new: true }
+  )
+  // const updatedCampaign = await Campaign.findByIdAndUpdate(
+  //   id,
+  //   { $set: validatedBody },
+  //   { new: true }
+  // )
+>>>>>>> release
 
   res.status(200).json(updatedCampaign)
 }

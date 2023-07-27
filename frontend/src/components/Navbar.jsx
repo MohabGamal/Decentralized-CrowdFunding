@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { useStateContext } from '../context'
@@ -29,11 +29,11 @@ const Navbar = () => {
           className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] dark:text-white bg-transparent outline-none"
         />
 
-        <div className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer">
+        <div className="w-[72px] h-full rounded-[20px] flex justify-center items-center">
           <img
             src={search}
             alt="search"
-            className="w-[15px] h-[15px] object-contain"
+            className="w-[30px] h-[35px] object-contain"
           />
         </div>
       </div>
@@ -44,11 +44,19 @@ const Navbar = () => {
             <CustomButton
               btnType="button"
               title="Create a campaign"
+<<<<<<< HEAD
               styles="bg-[#1dc071]"
               handleClick={() => navigate('create-campaign')}
             />
             <Link to="/profile">
               <div className="w-[52px] hover:scale-105 rounded-full grayscale bg-green-300 dark:bg-[#2c2f32] flex justify-center items-center cursor-pointer h-[52px]">
+=======
+              styles="bg-primary"
+              handleClick={() => navigate('create-campaign')}
+            />
+            <Link to="/profile">
+              <div className="w-[52px] hover:scale-105 rounded-full bg-light dark:bg-[#2c2f32] flex justify-center items-center cursor-pointer h-[52px]">
+>>>>>>> release
                 <img
                   src={profile}
                   alt="user"
@@ -109,7 +117,7 @@ const Navbar = () => {
                 />
                 <p
                   className={`ml-[20px] font-epilogue font-semibold text-[14px] ${
-                    isActive === link.name ? 'text-[#1dc071]' : 'text-[#808191]'
+                    isActive === link.name ? 'text-primary' : 'text-[#808191]'
                   }`}
                 >
                   {link.name}
@@ -135,7 +143,11 @@ const Navbar = () => {
             <CustomButton
               btnType="button"
               title={address ? 'Create a campaign' : 'Connect'}
+<<<<<<< HEAD
               styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]  w-full'}
+=======
+              styles={address ? 'bg-primary' : 'bg-[#8c6dfd]  w-full'}
+>>>>>>> release
               handleClick={() => {
                 if (address) navigate('create-campaign')
                 else connect()

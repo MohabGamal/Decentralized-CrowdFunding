@@ -1,7 +1,11 @@
+<<<<<<< HEAD
+=======
+/* eslint-disable no-undef */
+>>>>>>> release
 import { mongooseDisconnect } from '../config/index.config.js'
 import logger from '../config/logger.config.js'
 
-const isServerShuttingDown = false
+let isServerShuttingDown = false
 
 export function gracefulShutdown(app) {
   const signals = ['SIGINT', 'SIGTERM', 'SIGQUIT']
