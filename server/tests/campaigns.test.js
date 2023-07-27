@@ -36,6 +36,7 @@ beforeAll(async () => {
 })
 
 let id
+let mockCampaignId
 beforeEach(async () => {
   await Campaign.deleteMany({})
   jest.clearAllMocks()
@@ -59,6 +60,7 @@ beforeEach(async () => {
   expect(campaign1.statusCode).toEqual(201)
   expect(campaign2.statusCode).toEqual(201)
   id = campaign1.body._id
+  mockCampaignId = campaign1.body.campaignId
 })
 
 afterAll(async () => {
@@ -234,22 +236,26 @@ describe('add campaign', () => {
 describe('update campaign', () => {
   // update success
   it('should succeed to update campaign', async () => {
-    const res = await request(server).patch(`/api/v1/campaigns/${id}`).send({
-      desc: 'test',
-      category: 'test cat',
-      message: 'test message',
-      featured: true
-    })
+    const res = await request(server)
+      .patch(`/api/v1/campaigns/${mockCampaignId}`)
+      .send({
+        desc: 'test',
+        category: 'test cat',
+        message: 'test message',
+        featured: true
+      })
     expect(res.statusCode).toEqual(200)
   })
   // `desc`, `category`, `message`, `featured` success
   it('should succeed to update campaign if desc, category, message, or feature are undefiend', async () => {
-    const res = await request(server).patch(`/api/v1/campaigns/${id}`).send({
-      desc: undefined,
-      category: undefined,
-      message: undefined,
-      featured: undefined
-    })
+    const res = await request(server)
+      .patch(`/api/v1/campaigns/${mockCampaignId}`)
+      .send({
+        desc: undefined,
+        category: undefined,
+        message: undefined,
+        featured: undefined
+      })
     expect(res.statusCode).toEqual(200)
   })
 
@@ -259,7 +265,7 @@ describe('update campaign', () => {
 
     for (const field of immutableFields) {
       const res = await request(server)
-        .patch(`/api/v1/campaigns/${id}`)
+        .patch(`/api/v1/campaigns/${mockCampaignId}`)
         .send({
           [field]: 100
         })
@@ -272,7 +278,7 @@ describe('update campaign', () => {
     const fields = ['desc', 'category', 'message', 'featured']
     for (const field of fields) {
       const res = await request(server)
-        .patch(`/api/v1/campaigns/${id}`)
+        .patch(`/api/v1/campaigns/${mockCampaignId}`)
         .send({
           [field]: 100
         })

@@ -17,12 +17,18 @@ if (!process.env.CI)
     hardhat: {
       chainId: 1337,
       forking: {
-        url: process.env.ALCHEMY_API_URL
+        url: process.env.ALCHEMY_MAINNET_API_URL
       }
+    },
+    sepolia: {
+      url: process.env.ALCHEMY_SEPOLIA_API_URL,
+      accounts: [process.env.ACCOUNT_PRIVATE_KEY],
+      chainId: 11155111
     }
   }
 
 module.exports = {
+  defaultNetwork: 'hardhat',
   gasReporter: {
     enabled: true,
     currency: 'USD',

@@ -3,15 +3,15 @@
 const main = async () => {
   const crowdcharity = await ethers.getContractAt(
     'CrowdCharity',
-    '0x4CF4dd3f71B67a7622ac250f8b10d266Dc5aEbcE'
+    '0xeb06D7AbA4Ae11B9a078AFE08cBeBE2d5DC5da02'
   )
   const charityrewards = await ethers.getContractAt(
     'CharityRewards',
-    '0x56d91Ff187F9484f67d06F489a3Ca7893031F27f'
+    '0x06F249780125f7C81cF53Eb3613858958203b9Dc'
   )
 
-  const DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-  const dai = await ethers.getContractAt('IERC20', DAI)
+  // const DAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
+  // const dai = await ethers.getContractAt('IERC20', DAI)
 
   const [add1, add2, add3, add4] = await ethers.getSigners()
   // await crowdcharity

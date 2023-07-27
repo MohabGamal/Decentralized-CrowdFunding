@@ -1,9 +1,9 @@
 name: D-crowdfunding CI
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, release]
   pull_request:
-    branches: [main, develop]
+    branches: [main, develop, release]
   workflow_dispatch:
 
 jobs:

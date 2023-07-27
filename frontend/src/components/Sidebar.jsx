@@ -39,7 +39,7 @@ const Sidebar = () => {
           className={'w-full h-full  hover:scale-110 '}
         />
       </Link>
-      {/* <div className="flex-1 flex flex-col justify-between items-center bg-light dark:bg-dark rounded-[20px] w-[76px] py-4">
+      <div className="flex-1 flex flex-col justify-between items-center bg-light dark:bg-dark rounded-[20px] w-[76px] py-4">
         <div className="flex flex-col items-center justify-center gap-3">
           {navlinks.map((link) => (
             <Icon
@@ -53,6 +53,11 @@ const Sidebar = () => {
             />
           ))}
         </div>
+        {/* <Icon
+          styles="bg-light bg-slate-900 dark:bg-gray-800 hover:scale-110 transition-all duration-300"
+          imgUrl={theme === 'dark' ? sun : moon}
+          handleClick={toggleDarkMode}
+        /> */}
         <div
           className="w-[55px] h-[55px] rounded-[10px]
           flex justify-center items-center cursor-pointer bg-slate-900 dark:bg-gray-600 hover:scale-110 transition-all duration-300"
@@ -63,13 +68,6 @@ const Sidebar = () => {
             className="w-[43%] h-[43%]"
           />
         </div>
-      </div> */}
-      <div
-        className="w-[55px] h-[55px] rounded-[10px]
-          flex justify-center items-center cursor-pointer bg-slate-900 dark:bg-gray-600 hover:scale-110 transition-all duration-300"
-        onClick={toggleDarkMode}
-      >
-        <img src={theme === 'dark' ? sun : moon} className="w-[43%] h-[43%]" />
       </div>
     </div>
   )

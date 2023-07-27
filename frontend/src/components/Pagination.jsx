@@ -19,8 +19,8 @@ const Pagination = ({ currentPage, totalPages }) => {
         <li key={i}>
           <button
             className={`w-10 h-10 bg-[#4acd8d] ${
-              i == currentPage && 'bg-[#05CE78]'
-            } transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-green-600`}
+              i === currentPage ? 'text-white ' : 'text-gray-300'
+            } transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-green-700`}
             onClick={() => handlePageChange(i)}
           >
             {i}

@@ -15,10 +15,8 @@ const App = () => {
   }
   // 0a0a17
   // 1b1b20
-  // 1c1c28
-  //13131a
   return (
-    <div className="relative sm:-8 p-4 bg-[#f5f5f5] dark:bg-[#171721] min-h-screen flex flex-row">
+    <div className="relative sm:-8 p-4 bg-[#f5f5f5] dark:bg-[#13131a] min-h-screen flex flex-row">
       <div className="sm:flex hidden mr-10 relative">
         <Sidebar />
       </div>

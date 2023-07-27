@@ -11,7 +11,8 @@
     "deploy": "npx hardhat run scripts/deploy.js --network localhost",
     "deploy:CI": "npx hardhat run scripts/deploy.js",
     "deploy:mainnet": "npx hardhat run scripts/deploy.js --network mainnet",
-    "testScript": "npx hardhat run scripts/testScript.js --network localhost",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.js ",
+    "testScript": "npx hardhat run scripts/testScript.js",
     "swapTry": "npx hardhat run scripts/swapTry.js --network localhost"
   },
   "keywords": [],

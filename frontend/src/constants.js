@@ -22,7 +22,7 @@ export const navlinks = [
 ]
 
 export const CAMPAIGN_CONTRACT_ADDRESS =
-  '0xE2b5bDE7e80f89975f7229d78aD9259b2723d11F'
+  '0xeb06D7AbA4Ae11B9a078AFE08cBeBE2d5DC5da02'
 
 export const CAMPAIGN_CONTRACT_ABI = [
   {

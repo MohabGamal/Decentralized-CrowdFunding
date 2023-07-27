@@ -157,7 +157,6 @@ const CampaignDetails = () => {
       })
       await campaignContract.connect(signer).refund(campaignId)
       toast.success('Refunded!')
-      await reFetch()
       await userDonation.reFetch()
     } catch (error) {
       toast.error(formatError(error))
@@ -172,7 +171,7 @@ const CampaignDetails = () => {
     <div>
       {isLoading && <Loader />}
       <Modal modalContent={modalContent} setModalContent={setModalContent} />
-      <div className="w-full flex flex-col mt-10 gap-[30px]">
+      <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex-col flex-1">
           {campaign ? (
             <img
@@ -187,11 +186,11 @@ const CampaignDetails = () => {
               className="w-[100px] h-[100px] object-contain mx-auto"
             />
           )}
-          <div className="relative w-full mt-2 mb-3 bg-gray-300 rounded-full dark:bg-gray-700">
+          <div className="relative w-full mt-2 mb-3 bg-gray-200 rounded-full dark:bg-gray-700">
             <div
               className={`${
                 campaign?.status === 'Open' ? 'bg-[#23be73]' : 'bg-[#c70039]'
-              } text-xl font-medium dark:text-white text-center p-0.5 leading-none rounded-full`}
+              } text-xl font-medium text-white text-center p-0.5 leading-none rounded-full`}
               style={{ width: barPercentage <= 100 && barPercentage + '%' }}
             >
               {barPercentage}%
@@ -208,7 +207,7 @@ const CampaignDetails = () => {
             </p>
           </div>
         </div>
-        <div className="flex  w-full flex-wrap justify-around gap-[15px]">
+        <div className="flex md:w-[150px] w-full flex-wrap justify-between gap-[15px]">
           <CountBox
             title="Status"
             value={campaign?.status}
@@ -324,11 +323,11 @@ const CampaignDetails = () => {
         )}
       </div>
 
-      <div className="mt-[23px] flex flex-col gap-5">
+      <div className="mt-[23px] flex lg:flex-row flex-col gap-5">
         <div className="flex-[2] flex flex-col gap-[40px]">
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] dark:text-white uppercase mb-3">
-              Owner
+              Creator
             </h4>
             <div className="flex gap-2">
               <div className="w-[40px] h-[40px] flex items-center justify-center rounded-full bg-light dark:bg-[#2c2f32]">
@@ -348,7 +347,7 @@ const CampaignDetails = () => {
           </div>
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] dark:text-white uppercase">
-              Description
+              Story
             </h4>
             <div className="mt-[20px]">
               {editMode ? (
@@ -399,12 +398,12 @@ const CampaignDetails = () => {
           </div>
         </div>
         {campaign?.status == 'Open' && (
-          <div className="flex-1 ">
-            {/* <h4 className="font-epilogue font-semibold text-[18px] dark:text-white uppercase">
+          <div className="flex-1">
+            <h4 className="font-epilogue font-semibold text-[18px] dark:text-white uppercase">
               Fund
-            </h4> */}
+            </h4>
 
-            <div className="mt-[20px]  flex flex-col p-6 bg-light dark:bg-[#1c1c24] rounded-[30px]">
+            <div className="mt-[20px] flex flex-col p-6 bg-light dark:bg-[#1c1c24] rounded-[10px]">
               <p className="font-epilogue fount-medium text-[20px] leading-[30px] text-center dark:text-[#808191]">
                 Fund this campaign
               </p>
@@ -421,7 +420,7 @@ const CampaignDetails = () => {
 
                 <div className="my-[10px] p-4 bg-gray-300 dark:bg-[#13131a] rounded-[10px]">
                   <h4 className="font-epilogue font-semibold text-[14px] leading-[22px] dark:text-white">
-                    Message:
+                    Thanks Notation:
                   </h4>
                   {editMode ? (
                     <input
@@ -444,7 +443,7 @@ const CampaignDetails = () => {
                   <button
                     type="button"
                     onClick={handleDonate}
-                    className={`w-full hover:scale-105 text-gray-900 bg-zinc-300 dark:bg-gray-800 dark:text-white focus:ring-4 focus:outline-none focus:ring-gray-100 font-bold rounded-lg text-md px-5 py-2.5 text-center justify-center inline-flex items-center dark:focus:ring-gray-500
+                    className={`w-full hover:scale-105 text-gray-900 bg-gray-100 dark:bg-gray-800 dark:text-white focus:ring-4 focus:outline-none focus:ring-gray-100 font-bold rounded-lg text-md px-5 py-2.5 text-center justify-center inline-flex items-center dark:focus:ring-gray-500
                     ${
                       campaign?.owner == address &&
                       'pointer-events-none opacity-50'
