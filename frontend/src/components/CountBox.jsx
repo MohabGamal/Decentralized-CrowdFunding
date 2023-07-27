@@ -4,10 +4,6 @@ import PropTypes from 'prop-types'
 
 const CountBox = ({ title, value, styles }) => {
   const textStyle = styles?.text
-<<<<<<< HEAD
-  const bgStyle = styles?.bg
-=======
->>>>>>> release
 
   return (
     <div className="flex flex-col items-center w-[150px]">
@@ -28,8 +24,6 @@ const CountBox = ({ title, value, styles }) => {
   )
 }
 
-<<<<<<< HEAD
-=======
 CountBox.propTypes = {
   title: PropTypes.string.isRequired,
   value: PropTypes.string,
@@ -38,5 +32,4 @@ CountBox.propTypes = {
   })
 }
 
->>>>>>> release
 export default CountBox

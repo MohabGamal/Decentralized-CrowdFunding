@@ -10,9 +10,6 @@
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix blockchain\" \"npm run dev --prefix server\" \"npm run dev --prefix frontend\"",
-<<<<<<< HEAD
-    "deploy": "npm run install --only=production && npm run build --prefix frontend && npm run start --prefix server"
-=======
     "install:dev:server": "npm ci --prefix server",
     "install:prod:server": "npm ci --omit=dev --prefix server",
     "install:frontend": "npm ci --prefix frontend",
@@ -22,7 +19,6 @@
     "test:server": "npm run test --prefix server",
     "start:server": "npm run start --prefix server",
     "build:frontend": "npm run build --prefix frontend"
->>>>>>> release
   },
   "repository": {
     "type": "git",

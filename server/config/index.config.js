@@ -2,20 +2,6 @@ import rateLimit from 'express-rate-limit'
 import logger from './logger.config.js'
 import mongoose from 'mongoose'
 import multer from 'multer'
-<<<<<<< HEAD
-
-export const requestLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 200, // Limit each IP to 200 requests per `window` per 1 minute
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  message: 'Too many requests, please try again later.',
-  statusCode: 429 // Too Many Requests
-})
-
-export function mongooseConnect(mongoUri) {
-  mongoose.set('strictQuery', false)
-=======
 import { NODE_ENV } from '../constants.js'
 
 export let requestLimiter = (req, res, next) => next()
@@ -31,7 +17,6 @@ if (NODE_ENV === 'production')
 export function mongooseConnect(mongoUri) {
   mongoose.set('strictQuery', false)
   if (NODE_ENV == 'production') mongoose.set('debug', false)
->>>>>>> release
   mongoose
     .connect(mongoUri, {
       useNewUrlParser: true,
@@ -39,17 +24,9 @@ export function mongooseConnect(mongoUri) {
     })
     .then(() => {
       logger.info('mongoDB connected')
-<<<<<<< HEAD
-      process.env.CI && process.exit(0)
     })
     .catch((error) => {
       logger.error(error.message)
-      process.env.CI && process.exit(1)
-=======
-    })
-    .catch((error) => {
-      logger.error(error.message)
->>>>>>> release
     })
 
   mongoose.connection.on('disconnected', () => {

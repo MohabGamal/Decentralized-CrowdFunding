@@ -1,44 +1,11 @@
-<<<<<<< HEAD
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-
-=======
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { Link, useNavigate } from 'react-router-dom'
->>>>>>> release
 import { logo, moon, sun } from '../assets'
 import { navlinks } from '../constants'
 import { useStateContext } from '../context'
 
-<<<<<<< HEAD
-// #e4dfdf
-const Sidebar = () => {
-  const navigate = useNavigate()
-  const { toggleDarkMode } = useStateContext()
-  const [isActive, setIsActive] = useState('dashboard')
-
-  const Icon = ({ styles, name, imgUrl, isActive, handleClick }) => (
-    <div
-      className={`w-[48px] h-[48px] rounded-[10px] ${
-        isActive && isActive === name && 'bg-green-200 dark:bg-[#2c2f32]' // #ffffff
-      } flex justify-center items-center cursor-pointer hover:scale-110 ${styles}`}
-      onClick={handleClick}
-    >
-      {!isActive ? (
-        <img src={imgUrl} alt="fund_logo" className="w-1/2 h-1/2" />
-      ) : (
-        <img
-          src={imgUrl}
-          alt="fund_logo"
-          className={`w-1/2 h-1/2 ${isActive !== name && 'grayscale'}`}
-        />
-      )}
-    </div>
-  )
-
-=======
 const Icon = ({ name, imgUrl, isActive, handleClick }) => (
   <div
     className={`w-[55px] h-[55px] rounded-[10px] hover:bg-green-200 dark:hover:bg-[#2c2f32] ${
@@ -63,7 +30,6 @@ const Sidebar = () => {
   const { toggleDarkMode, theme } = useStateContext()
   const [isActive, setIsActive] = useState('dashboard')
 
->>>>>>> release
   return (
     <div className="flex justify-between flex-col sticky h-[93vh] top-3">
       <Link to="/" className="w-full h-[55px] mb-6">
@@ -87,13 +53,6 @@ const Sidebar = () => {
             />
           ))}
         </div>
-<<<<<<< HEAD
-        <Icon
-          styles=" bg-light bg-slate-900  dark:bg-gray-800 transition-all duration-300"
-          imgUrl={localStorage.theme === 'dark' ? sun : moon}
-          handleClick={toggleDarkMode}
-        />
-=======
         {/* <Icon
           styles="bg-light bg-slate-900 dark:bg-gray-800 hover:scale-110 transition-all duration-300"
           imgUrl={theme === 'dark' ? sun : moon}
@@ -109,7 +68,6 @@ const Sidebar = () => {
             className="w-[43%] h-[43%]"
           />
         </div>
->>>>>>> release
       </div>
     </div>
   )

@@ -9,7 +9,4 @@ export { default as Loader } from './Loader'
 export { default as UserRewards } from './UserRewards'
 export { default as Pagination } from './Pagination'
 export { default as MetMaskButton } from './MetaMaskButton'
-<<<<<<< HEAD
-=======
 export { default as Modal } from './Modal'
->>>>>>> release

@@ -44,19 +44,11 @@ const Navbar = () => {
             <CustomButton
               btnType="button"
               title="Create a campaign"
-<<<<<<< HEAD
-              styles="bg-[#1dc071]"
-              handleClick={() => navigate('create-campaign')}
-            />
-            <Link to="/profile">
-              <div className="w-[52px] hover:scale-105 rounded-full grayscale bg-green-300 dark:bg-[#2c2f32] flex justify-center items-center cursor-pointer h-[52px]">
-=======
               styles="bg-primary"
               handleClick={() => navigate('create-campaign')}
             />
             <Link to="/profile">
               <div className="w-[52px] hover:scale-105 rounded-full bg-light dark:bg-[#2c2f32] flex justify-center items-center cursor-pointer h-[52px]">
->>>>>>> release
                 <img
                   src={profile}
                   alt="user"
@@ -143,11 +135,7 @@ const Navbar = () => {
             <CustomButton
               btnType="button"
               title={address ? 'Create a campaign' : 'Connect'}
-<<<<<<< HEAD
-              styles={address ? 'bg-[#1dc071]' : 'bg-[#8c6dfd]  w-full'}
-=======
               styles={address ? 'bg-primary' : 'bg-[#8c6dfd]  w-full'}
->>>>>>> release
               handleClick={() => {
                 if (address) navigate('create-campaign')
                 else connect()

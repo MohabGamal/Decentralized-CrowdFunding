@@ -7,8 +7,6 @@ export default defineConfig({
   define: {
     'global': 'globalThis',
     'process.env': {}
-<<<<<<< HEAD
-=======
   },
   // to fix the issue of vite not able to build because of some chunks are larger than 500 kBs
   build: {
@@ -25,6 +23,5 @@ export default defineConfig({
         }
       }
     }
->>>>>>> release
   }
 })

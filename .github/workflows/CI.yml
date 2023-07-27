@@ -1,11 +1,10 @@
 name: D-crowdfunding CI
 on:
   push:
-    branches: [ master ]
+    branches: [main, develop, release]
   pull_request:
-    branches: [main, develop, release] 
+    branches: [main, develop, release]
   workflow_dispatch:
-
 
 jobs:
   build:
@@ -13,9 +12,9 @@ jobs:
       CI: true
     strategy:
       matrix:
-        node-version: [18.x, 16.x]
-        # mongodb-version: ['6.7']
-    runs-on: [windows-latest]
+        node-version: [18.x]
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Github code
         uses: actions/checkout@v3
@@ -23,13 +22,28 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      # - name: Use MongoDB from GitHub actions
-      #   uses: supercharge/mongodb-github-action@1.6.0
-      #   with:
-      #     mongodb-version: ${{ matrix.mongodb-version }}
-      - run: npm install
-      - run: npm run compile 
-      - run: npm run test
-      - run: npm run deploy
-      # - run: npm run start
-      
+
+      - name: install frontend dependencies
+        run: npm run install:frontend
+      - name: build frontend
+        run: npm run build:frontend
+
+      - name: install server dev dependencies
+        run: npm run install:dev:server
+      - name: test server
+        run: npm run test:server
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Github code
+        uses: actions/checkout@v3
+
+      - name: Docker Setup Buildx
+        uses: docker/setup-buildx-action@v2.7.0
+
+      - name: Build Docker image
+        run: docker build . -t my-app:latest
+
+      - name: Run Docker container
+        run: docker run -d --name my-container -p 8000:8000 my-app:latest

@@ -15,9 +15,5 @@ export const ethAdressSchema = Joi.object({
 export const objectSchema = Joi.object({
   object: Joi.object().required()
 }).messages({
-<<<<<<< HEAD
-  'any.required': `invalid input`
-=======
   'any.required': 'invalid input'
->>>>>>> release
 })

@@ -46,16 +46,5 @@ module.exports = {
       }
     }
   },
-<<<<<<< HEAD
-  networks: {
-    hardhat: {
-      chainId: 1337,
-      forking: {
-        url: process.env.ALCHEMY_API_URL
-      }
-    }
-  }
-=======
   networks
->>>>>>> release
 }

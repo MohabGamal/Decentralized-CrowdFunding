@@ -20,33 +20,6 @@ async function main() {
   console.log(`CharityRewards address: ${charityrewards.address}`)
 
   await Promise.all([
-<<<<<<< HEAD
-    // charityrewards
-    //   .connect(add1)
-    //   .addToken(
-    //     'Supporting Points',
-    //     'SP',
-    //     'https://bafybeifbqmphvoaymvsqfhta74uyiqylvlsh3icg62bszxqepbainclxlu.ipfs.w3s.link/Supporting-Points.png',
-    //   ),
-    // crowdcharity
-    //   .connect(add1)
-    //   .createCampaign(
-    //     ethers.utils.parseEther('10000'),
-    //     ethers.utils.parseEther('100'),
-    //     1,
-    //     'test1',
-    //     'https://images.unsplash.com/photo-1679267441399-d73d2640cf68?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-    //   ),
-    // crowdcharity
-    //   .connect(add2)
-    //   .createCampaign(
-    //     ethers.utils.parseEther('100'),
-    //     ethers.utils.parseEther('10'),
-    //     1,
-    //     'test2',
-    //     'https://images.unsplash.com/photo-1679556026240-6ea91e686cfb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80',
-    //   ),
-=======
     crowdcharity
       // .connect(add1)
       .createCampaign(
@@ -110,7 +83,6 @@ async function main() {
     //     'Makers Cabinet: Set Squares',
     //     'https://ksr-ugc.imgix.net/assets/041/355/811/89d37cbd75ee5aa84d3b2bfef507678b_original.png?ixlib=rb-4.0.2&crop=faces&w=1024&h=576&fit=crop&v=1687251005&auto=format&frame=1&q=92&s=5483f83dc33a9d0f85e782d16765f970'
     //   )
->>>>>>> release
   ])
   // console.log(await crowdcharity.getCampaignsByIds([0, 1]))
 }
