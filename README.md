@@ -43,8 +43,8 @@
 ![project image 1](https://github.com/MohabGamal/Decentralized-CrowdFunding/blob/main/media/img1.jpg)
 ![project image 2](https://github.com/MohabGamal/Decentralized-CrowdFunding/blob/main/media/img2.jpg)
 
-## Demo
-![project demo](https://github.com/MohabGamal/Decentralized-CrowdFunding/blob/main/media/demo.mp4)
+## Demo Video
+https://github.com/MohabGamal/Decentralized-CrowdFunding/assets/70500510/0746c9e2-827d-4daf-9442-ea8e500a9378
 
 ## Technologies & packages used:
 - <b>ethereum:</b>. The blockchain we use to store our app data on and execute the blockchain code (Smart Contracts) on.
