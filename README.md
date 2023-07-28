@@ -3,11 +3,9 @@
 ![workflow CI badge](https://github.com/MohabGamal/Decentralized-CrowdFunding/actions/workflows/CI.yml/badge.svg)
 ![hardhat](https://github.com/MohabGamal/Decentralized-CrowdFunding/blob/main/media/hardhat-badge.svg)
 
-
 ![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?style=for-the-badge&logo=Ethereum&logoColor=whi)
 ![solidity](https://img.shields.io/badge/Solidity-e6e6e6?style=for-the-badge&logo=solidity&logoColor=black)
 ![OpenZeppelin](https://img.shields.io/badge/OpenZeppelin-4E5EE4?logo=OpenZeppelin&logoColor=fff&style=for-the-badge)
-
 ![javascript](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
 ![Node.JS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
@@ -18,12 +16,10 @@
 ![Chai](https://img.shields.io/badge/chai-A30701?style=for-the-badge&logo=chai&logoColor=white)
 ![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)
 ![postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white)
-
 ![react](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
 ![web3](https://img.shields.io/badge/web3.js-F16822?style=for-the-badge&logo=web3.js&logoColor=white)
 ![tailwindcss](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-
 ![git](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white
 )
 ![github actions](https://img.shields.io/badge/Github%20Actions-282a2e?style=for-the-badge&logo=githubactions&logoColor=367cfe)
@@ -43,11 +39,11 @@
 ![project image 1](https://github.com/MohabGamal/Decentralized-CrowdFunding/blob/main/media/img1.jpg)
 ![project image 2](https://github.com/MohabGamal/Decentralized-CrowdFunding/blob/main/media/img2.jpg)
 
-## Demo Video
+## `Demo Video`
 https://github.com/MohabGamal/Decentralized-CrowdFunding/assets/70500510/0746c9e2-827d-4daf-9442-ea8e500a9378
 
-## Technologies & packages used:
-- <b>ethereum:</b>. The blockchain we use to store our app data on and execute the blockchain code (Smart Contracts) on.
+## `Technologies & packages used:`
+- <b>ethereum:</b> The blockchain we use to store our app data on and execute the blockchain code (Smart Contracts) on.
   - <b>sepolia:</b> The test blockchain network we use to test our Smart Contracts on. 
  
   - <b>solidity:</b> The language we write our Smart Contracts in.
